@@ -63,7 +63,7 @@ Cleaned and analyzed 75+ years of Formula 1 race data (1950–2026) in MySQL, fi
 ---
 
 ### Beyond Data
-- Following Formula 1, the only sport I watch
+- Following Formula 1
 - Gaming on Steam
 - Reading comics
 - Watching movies and TV series

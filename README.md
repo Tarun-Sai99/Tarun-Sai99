@@ -12,6 +12,7 @@ I am currently seeking full-time Data Analyst roles and internships.
 ### Connect with me
 [![Gmail](https://img.shields.io/badge/Gmail-EA4335?style=flat&logo=gmail&logoColor=white)](mailto:tarunsaipr1@gmail.com)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/tarun-sai-p/)
+[![Google Skills](https://img.shields.io/badge/Google%20Skills-34A853?style=flat&logo=google&logoColor=white)](https://www.skills.google/public_profiles/424aeee1-a50c-4b2e-b5af-216e6fdb204d)
 
 ---
 

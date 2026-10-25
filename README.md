@@ -71,7 +71,7 @@ Cleaned and analyzed 75+ years of Formula 1 race data (1950–2026) in MySQL, fi
 
 <p>
   <img src="https://github-readme-stats.vercel.app/api?username=Tarun-Sai99&show_icons=true&hide_border=true" alt="GitHub stats" height="165" />
-  <img src="https://streak-stats.demolab.com?user=Tarun-Sai99&hide_border=true" alt="GitHub streak" height="165" />
+  <img src="https://streak-stats.demolab.com?user=Tarun-Sai99&hide_border=true&timezone=Asia/Kolkata" alt="GitHub streak" height="165" />
 </p>
 
 ---

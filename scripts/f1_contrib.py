@@ -1,7 +1,9 @@
 """Draw an F1 car lapping the GitHub contribution grid.
 
 The car drives every row of the grid like a track. On days with
-contributions it opens DRS and speeds up. Writes a light and a dark SVG.
+contributions it opens DRS and speeds up. Your best days are purple
+"fastest sector" squares, where it goes faster still. Writes a light and a
+dark SVG.
 
 Usage: python f1_contrib.py <github-login> <out-dir> [sample.json]
 Needs GITHUB_TOKEN in the environment unless a sample file is given.
@@ -16,6 +18,8 @@ STEP = CELL + GAP
 PAD_X, PAD_TOP, PAD_BOTTOM = 24, 16, 34
 BASE_T = 0.085     # seconds per empty square
 DRS_T = 0.03       # seconds per contribution square
+PURPLE_T = 0.018   # seconds per best-day (purple) square
+PURPLE = {"light": "#8250df", "dark": "#b07cff"}
 TURN_T = 0.12      # seconds for a turn between rows
 FINISH_T = 1.2     # pause after the lap before restarting
 
@@ -51,6 +55,26 @@ def levels(weeks):
     return lambda c: 0 if c == 0 else 1 + sum(c > x for x in q)
 
 
+def best_days(weeks):
+    """Top 10% of active days by count (at least the single best day)."""
+    counts = sorted((c for w in weeks for _, c in w if c > 0), reverse=True)
+    if not counts:
+        return float("inf")
+    return counts[max(0, len(counts) // 10 - 1)]
+
+
+def toggles(pts, idx, lap):
+    """Opacity keyframes that switch on while pts[i][idx] is true."""
+    frames, state = ["0%{opacity:0}"], False
+    for p in pts:
+        on = bool(p[idx])
+        if on != state:
+            frames.append(f"{max(p[0] / lap * 100 - 0.001, 0):.3f}%{{opacity:{int(state)}}}")
+            frames.append(f"{p[0] / lap * 100:.3f}%{{opacity:{int(on)}}}")
+            state = on
+    return "".join(frames)
+
+
 def car_svg():
     # Top-down F1 car, pointing right, centred on (0, 0). About 26 x 11 px.
     return """
@@ -72,6 +96,7 @@ def car_svg():
 def build(weeks, theme):
     t = THEMES[theme]
     lvl = levels(weeks)
+    best = best_days(weeks)
     cols = len(weeks)
     grid_w = cols * STEP - GAP
     width = grid_w + 2 * PAD_X
@@ -89,9 +114,9 @@ def build(weeks, theme):
             count[(c, row)] = n
 
     # Build the lap: rows left to right, then right to left, like a track.
-    pts = []  # (time, x, y, angle, drs)
+    pts = []  # (time, x, y, angle, drs, purple)
     time = 0.0
-    pts.append((0.0, cx(0) - 30, cy(0), 0, False))
+    pts.append((0.0, cx(0) - 30, cy(0), 0, False, False))
     time += 0.4
     for row in range(7):
         order = range(cols) if row % 2 == 0 else range(cols - 1, -1, -1)
@@ -99,15 +124,16 @@ def build(weeks, theme):
         for c in order:
             if (c, row) not in count:
                 continue
-            drs = count[(c, row)] > 0
-            pts.append((time, cx(c), cy(row), ang, drs))
-            time += DRS_T if drs else BASE_T
+            n = count[(c, row)]
+            drs, purple = n > 0, n > 0 and n >= best
+            pts.append((time, cx(c), cy(row), ang, drs, purple))
+            time += PURPLE_T if purple else DRS_T if drs else BASE_T
         if row < 6:
             last = pts[-1]
-            pts.append((time, last[1], last[2] + STEP / 2, 90, False))
+            pts.append((time, last[1], last[2] + STEP / 2, 90, False, False))
             time += TURN_T
     last = pts[-1]
-    pts.append((time, last[1] + (30 if last[3] == 0 else -30), last[2], last[3], False))
+    pts.append((time, last[1] + (30 if last[3] == 0 else -30), last[2], last[3], False, False))
     lap = time + FINISH_T
 
     def pct(x):
@@ -115,7 +141,7 @@ def build(weeks, theme):
 
     # Keep the angle continuous so the car never spins the long way round.
     move, drs_frames, prev_ang = [], [], None
-    for tm, x, y, a, drs in pts:
+    for tm, x, y, a, *_ in pts:
         if prev_ang is not None:
             while a - prev_ang > 180:
                 a -= 360
@@ -125,27 +151,18 @@ def build(weeks, theme):
         move.append(f"{pct(tm)}{{transform:translate({x:.1f}px,{y:.1f}px) rotate({a}deg)}}")
     move.append(f"100%{{transform:translate({pts[-1][1]:.1f}px,{pts[-1][2]:.1f}px) rotate({prev_ang}deg)}}")
 
-    state = None
-    for tm, _, _, _, drs in pts:
-        if drs != state:
-            drs_frames.append((tm, drs))
-            state = drs
-    fade = []
-    for tm, on in drs_frames:
-        fade.append(f"{pct(max(tm - 0.0001, 0))}{{opacity:{0 if on else 1}}}")
-        fade.append(f"{pct(tm)}{{opacity:{1 if on else 0}}}")
-    on_frames = "".join(fade)
-    off_frames = "".join(f.replace("opacity:1", "opacity:X").replace("opacity:0", "opacity:1").replace("opacity:X", "opacity:0") for f in fade)
+    drs_frames = toggles(pts, 4, lap)
+    purple_frames = toggles(pts, 5, lap)
 
     # Contribution squares flash when the car passes them.
-    passed = {(round(x, 1), round(y, 1)): tm for tm, x, y, _, d in pts if d}
+    passed = {(round(p[1], 1), round(p[2], 1)): p[0] for p in pts if p[4]}
 
     cells = []
     flash_css = []
     for c, w in enumerate(weeks):
         for row, n in w:
             x, y = PAD_X + c * STEP, PAD_TOP + row * STEP
-            fill = t["levels"][lvl(n)]
+            fill = PURPLE[theme] if n > 0 and n >= best else t["levels"][lvl(n)]
             key = (round(cx(c), 1), round(cy(row), 1))
             cls = ""
             if n > 0 and key in passed:
@@ -165,20 +182,25 @@ def build(weeks, theme):
 <style>
 .car{{animation:lap {lap:.2f}s linear infinite}}
 @keyframes lap{{{''.join(move)}}}
-.trail,.drs-on{{opacity:0;animation:on {lap:.2f}s step-end infinite}}
-.drs-off{{animation:off {lap:.2f}s step-end infinite}}
-@keyframes on{{0%{{opacity:0}}{on_frames}}}
-@keyframes off{{0%{{opacity:1}}{off_frames}}}
+.trail,.drs-on{{opacity:0;animation:drs {lap:.2f}s step-end infinite}}
+.fs-on{{opacity:0;animation:fs {lap:.2f}s step-end infinite}}
+@keyframes drs{{{drs_frames}}}
+@keyframes fs{{{purple_frames}}}
 {''.join(flash_css)}
 text{{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:{t['text']}}}
 </style>
 <rect width="{width}" height="{height}" rx="6" fill="{t['bg']}"/>
 {''.join(cells)}
-<text x="{PAD_X}" y="{by + 12}">{total} contributions in the last year · green squares open DRS</text>
+<text x="{PAD_X}" y="{by + 12}">{total} contributions in the last year · green opens DRS · purple = fastest sector (best days)</text>
 <g transform="translate({width - PAD_X - 44},{by})">
   <rect width="44" height="16" rx="3" fill="{t['panel']}" stroke="{t['border']}"/>
-  <g class="drs-off"><text x="22" y="12" text-anchor="middle" style="font-weight:700">DRS</text></g>
+  <text x="22" y="12" text-anchor="middle" style="font-weight:700">DRS</text>
   <g class="drs-on"><rect width="44" height="16" rx="3" fill="#2ea043"/><text x="22" y="12" text-anchor="middle" style="font-weight:700;fill:#fff">DRS</text></g>
+</g>
+<g transform="translate({width - PAD_X - 44 - 8 - 104},{by})">
+  <rect width="104" height="16" rx="3" fill="{t['panel']}" stroke="{t['border']}"/>
+  <text x="52" y="12" text-anchor="middle" style="font-weight:700">FASTEST SECTOR</text>
+  <g class="fs-on"><rect width="104" height="16" rx="3" fill="{PURPLE[theme]}"/><text x="52" y="12" text-anchor="middle" style="font-weight:700;fill:#fff">FASTEST SECTOR</text></g>
 </g>
 <g class="car"><g transform="scale(1.6)">{car_svg()}</g></g>
 </svg>

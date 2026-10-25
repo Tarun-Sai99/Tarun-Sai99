@@ -59,6 +59,7 @@ Cleaned and analyzed 75+ years of Formula 1 race data (1950–2026) in MySQL, fi
 ![Git](https://img.shields.io/badge/Git-F05032?style=flat&logo=git&logoColor=white)
 ![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white)
 ![VS Code](https://img.shields.io/badge/VS%20Code-007ACC?style=flat&logo=visualstudiocode&logoColor=white)
+![Google Colab](https://img.shields.io/badge/Google%20Colab-F9AB00?style=flat&logo=googlecolab&logoColor=white)
 
 **Concepts:** Data Cleaning · Exploratory Data Analysis · Descriptive Statistics
 

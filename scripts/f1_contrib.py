@@ -22,7 +22,7 @@ FINISH_T = 1.2     # pause after the lap before restarting
 THEMES = {
     "light": {"bg": "#ffffff", "levels": ["#ebedf0", "#9be9a8", "#40c463", "#30a14e", "#216e39"],
               "text": "#57606a", "panel": "#f6f8fa", "border": "#d0d7de"},
-    "dark": {"bg": "#0d1117", "levels": ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"],
+    "dark": {"bg": "#0d1117", "levels": ["#161b22", "#2ea043", "#3fbf5a", "#4ade80", "#86efac"],
              "text": "#8b949e", "panel": "#161b22", "border": "#30363d"},
 }
 

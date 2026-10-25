@@ -17,9 +17,20 @@ I am currently seeking full-time Data Analyst roles and internships.
 
 ### Featured Projects
 
+**[Marvel vs DC: Comic Character Analysis (MySQL)](https://github.com/Tarun-Sai99/marvel-dc-sql-analysis)**
+Cleaned and analyzed 23,000+ Marvel and DC characters in MySQL, merging two messy wiki datasets and fixing issues like mixed date formats, broken unicode and duplicate IDs before running 15 analysis questions.
+**Key insights:**
+- Page time is extremely concentrated. At Marvel, the top 1% of characters get 42% of all appearances, while the bottom half share just 4%.
+- Female characters have roughly doubled since the 1940s but have stalled at about 30% of new characters.
+
+`MySQL` `Window Functions` `REGEXP` `Data Cleaning` `EDA` `Python`
+
 **[F1 Performance Analysis (MySQL)](https://github.com/Tarun-Sai99/f1-performance-analysis-mysql)**
 Cleaned and analyzed 75+ years of Formula 1 race data (1950–2026) in MySQL, fixing 13 data quality issues before running exploratory analysis on driver and constructor performance.
-**Key insight:** Pole position now decides more races than ever. The pole sitter won 55% of races in the hybrid era (2014 onward), up from 36% in 1980–1999.
+**Key insights:**
+- Pole position now decides more races than ever. The pole sitter won 55% of races in the hybrid era (2014 onward), up from 36% in 1980–1999.
+- Mechanical retirements fell from 39% of starters in the 1950s to 5.6% in the 2020s.
+
 `MySQL` `CTEs` `Window Functions` `Data Cleaning` `EDA` `Python`
 
 ---

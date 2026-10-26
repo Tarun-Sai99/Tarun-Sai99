@@ -2,7 +2,7 @@ name: F1 contribution lap
 
 on:
   schedule:
-    - cron: "0 0 * * *"   # every day at midnight UTC
+    - cron: "0 */6 * * *"   # every 6 hours
   workflow_dispatch:       # lets you run it by hand from the Actions tab
   push:
     branches: [main]

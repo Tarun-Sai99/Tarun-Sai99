@@ -15,7 +15,7 @@ import urllib.request
 
 CELL, GAP = 11, 3
 STEP = CELL + GAP
-PAD_X, PAD_TOP, PAD_BOTTOM = 24, 16, 34
+PAD_X, PAD_TOP, PAD_BOTTOM = 36, 30, 34
 BASE_T = 0.085     # seconds per empty square
 DRS_T = 0.03       # seconds per contribution square
 PURPLE_T = 0.018   # seconds per best-day (purple) square
@@ -44,11 +44,11 @@ def fetch(login):
     with urllib.request.urlopen(req) as r:
         data = json.load(r)
     weeks = data["data"]["user"]["contributionsCollection"]["contributionCalendar"]["weeks"]
-    return [[(d["weekday"], d["contributionCount"]) for d in w["contributionDays"]] for w in weeks]
+    return [[(d["weekday"], d["contributionCount"], d["date"]) for d in w["contributionDays"]] for w in weeks]
 
 
 def levels(weeks):
-    counts = sorted(c for w in weeks for _, c in w if c > 0)
+    counts = sorted(c for w in weeks for _, c, *_ in w if c > 0)
     if not counts:
         return lambda c: 0
     q = [counts[int(len(counts) * f)] for f in (0.25, 0.5, 0.75)]
@@ -57,7 +57,7 @@ def levels(weeks):
 
 def best_days(weeks):
     """Top 10% of active days by count (at least the single best day)."""
-    counts = sorted((c for w in weeks for _, c in w if c > 0), reverse=True)
+    counts = sorted((c for w in weeks for _, c, *_ in w if c > 0), reverse=True)
     if not counts:
         return float("inf")
     return counts[max(0, len(counts) // 10 - 1)]
@@ -110,7 +110,7 @@ def build(weeks, theme):
 
     count = {}
     for c, w in enumerate(weeks):
-        for row, n in w:
+        for row, n, *_ in w:
             count[(c, row)] = n
 
     # Build the lap: rows left to right, then right to left, like a track.
@@ -160,7 +160,7 @@ def build(weeks, theme):
     cells = []
     flash_css = []
     for c, w in enumerate(weeks):
-        for row, n in w:
+        for row, n, *_ in w:
             x, y = PAD_X + c * STEP, PAD_TOP + row * STEP
             fill = PURPLE[theme] if n > 0 and n >= best else t["levels"][lvl(n)]
             key = (round(cx(c), 1), round(cy(row), 1))
@@ -177,7 +177,23 @@ def build(weeks, theme):
             cells.append(f'<rect{cls} x="{x}" y="{y}" width="{CELL}" height="{CELL}" rx="2" fill="{fill}"/>')
 
     by = height - 22
-    total = sum(n for w in weeks for _, n in w)
+
+    # Month labels on top and Mon/Wed/Fri on the left, like GitHub's graph.
+    months = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split()
+    labels, prev, last_c = [], None, -9
+    for c, w in enumerate(weeks):
+        dated = [d for d in w if len(d) > 2]
+        if not dated:
+            continue
+        m = int(dated[0][2][5:7])
+        if m != prev and c < cols - 2 and c - last_c >= 3:
+            if prev is not None or int(dated[0][2][8:10]) <= 7:
+                last_c = c
+                labels.append(f'<text x="{PAD_X + c * STEP}" y="{PAD_TOP - 8}">{months[m - 1]}</text>')
+        prev = m
+    for row, name in ((1, "Mon"), (3, "Wed"), (5, "Fri")):
+        labels.append(f'<text x="{PAD_X - 6}" y="{cy(row) + 4}" text-anchor="end" style="font-size:10px">{name}</text>')
+    total = sum(n for w in weeks for _, n, *_ in w)
     return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" width="{width}" height="{height}" role="img" aria-label="F1 car lapping the contribution graph">
 <style>
 .car{{animation:lap {lap:.2f}s linear infinite}}
@@ -191,6 +207,7 @@ text{{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sa
 </style>
 <rect width="{width}" height="{height}" rx="6" fill="{t['bg']}"/>
 {''.join(cells)}
+{''.join(labels)}
 <text x="{PAD_X}" y="{by + 12}">{total} contributions in the last year · green opens DRS · purple = fastest sector (best days)</text>
 <g transform="translate({width - PAD_X - 44},{by})">
   <rect width="44" height="16" rx="3" fill="{t['panel']}" stroke="{t['border']}"/>

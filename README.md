@@ -81,7 +81,7 @@ Cleaned and analyzed 75+ years of Formula 1 race data (1950–2026) in MySQL, fi
 - Playing narrative-driven AAA games, with an interest in game design and storytelling [![Steam](https://img.shields.io/badge/Steam-000000?style=flat&logo=steam&logoColor=white)](https://steamcommunity.com/profiles/76561199473923156/)
 - Reading comics, with an eye for storytelling and how characters are built
 - Following films and TV series, from storytelling to box office trends
-- Analysing my own Spotify listening data
+- Analysing my own Spotify listening data [![Spotify](https://img.shields.io/badge/Spotify-1DB954?style=flat&logo=spotify&logoColor=white)](https://open.spotify.com/user/312nykmlcl4xkhip6eeckcwcc5u4)
 
 ---
 

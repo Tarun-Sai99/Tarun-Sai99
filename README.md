@@ -81,7 +81,7 @@ Cleaned and analyzed 75+ years of Formula 1 race data (1950–2026) in MySQL, fi
 - Gaming on Steam [![Steam](https://img.shields.io/badge/Steam-000000?style=flat&logo=steam&logoColor=white)](https://steamcommunity.com/profiles/76561199473923156/)
 - Reading comics
 - Watching movies and TV series
-- Listening to music every day
+- Analysing my own Spotify listening data
 
 ---
 

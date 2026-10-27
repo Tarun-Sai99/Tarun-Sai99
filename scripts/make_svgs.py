@@ -61,7 +61,7 @@ def hero(path):
 <rect x="1" y="1" width="{W - 2}" height="{H - 2}" rx="14" fill="{BG}" stroke="{LINE}" stroke-width="2"/>
 <path d="M1 15 Q1 1 15 1 H{W - 15} Q{W - 1} 1 {W - 1} 15 V38 H1 Z" fill="{BAR}"/>
 <circle cx="24" cy="20" r="6.5" fill="#E07A5F"/><circle cx="46" cy="20" r="6.5" fill="#E9B44C"/><circle cx="68" cy="20" r="6.5" fill="#81B29A"/>
-<text x="{W / 2}" y="25" text-anchor="middle" font-family="{FONT}" font-size="14" fill="{SOFT}">tarun@portfolio: ~ mysql</text>
+<text x="{W / 2}" y="25" text-anchor="middle" font-family="{FONT}" font-size="14" fill="{SOFT}">tarun@profile: ~ mysql</text>
 <g font-family="{FONT}" font-size="17" xml:space="preserve">
 <text x="{X0}" y="{Y0}" fill="{ACCENT}" font-weight="700" textLength="{len(prompt.rstrip()) * CW}">{prompt.rstrip()}</text>
 <text x="{qx}" y="{Y0}" fill="{INK}" clip-path="url(#typed)" textLength="{len(query) * CW}" lengthAdjust="spacingAndGlyphs">{escape(query)}</text>

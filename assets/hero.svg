@@ -7,7 +7,7 @@
 <rect x="1" y="1" width="998" height="349" rx="14" fill="#0F172A" stroke="#334155" stroke-width="2"/>
 <path d="M1 15 Q1 1 15 1 H985 Q999 1 999 15 V38 H1 Z" fill="#1E293B"/>
 <circle cx="24" cy="20" r="6.5" fill="#E07A5F"/><circle cx="46" cy="20" r="6.5" fill="#E9B44C"/><circle cx="68" cy="20" r="6.5" fill="#81B29A"/>
-<text x="500.0" y="25" text-anchor="middle" font-family="'SFMono-Regular', Consolas, 'Liberation Mono', 'Courier New', monospace" font-size="14" fill="#94A3B8">tarun@portfolio: ~ mysql</text>
+<text x="500.0" y="25" text-anchor="middle" font-family="'SFMono-Regular', Consolas, 'Liberation Mono', 'Courier New', monospace" font-size="14" fill="#94A3B8">tarun@profile: ~ mysql</text>
 <g font-family="'SFMono-Regular', Consolas, 'Liberation Mono', 'Courier New', monospace" font-size="17" xml:space="preserve">
 <text x="32" y="78" fill="#EF4444" font-weight="700" textLength="61.199999999999996">mysql></text>
 <text x="103.39999999999999" y="78" fill="#E2E8F0" clip-path="url(#typed)" textLength="489.59999999999997" lengthAdjust="spacingAndGlyphs">SELECT * FROM profile WHERE name = 'Tarun Sai'\G</text>

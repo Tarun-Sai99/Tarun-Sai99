@@ -92,6 +92,8 @@ I am currently seeking full-time Data Analyst roles and internships.
   <a href="https://open.spotify.com/user/312nykmlcl4xkhip6eeckcwcc5u4"><img src="https://img.shields.io/badge/Spotify-1DB954?style=for-the-badge&logo=spotify&logoColor=white" alt="Spotify" /></a>
 </p>
 
+<img src="assets/characters.svg" alt="Pixel-art fan art of my favourite characters: Midnight Spider-Man, Absolute Superman, Incredible Hulk, Ghost Rider and Doctor Doom" width="100%" />
+
 ---
 
 <picture>

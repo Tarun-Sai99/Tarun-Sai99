@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 190" width="1000" height="190" role="img" aria-label="Currently exploring: Power BI dashboards and deeper Python analysis">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 306" width="1000" height="306" role="img" aria-label="Currently exploring: Power BI dashboards and deeper Python analysis. The Hulk leaps from card to card.">
 <style>
   .t { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; }
   .bar { animation: fill 3.2s ease-in-out infinite; transform-box: fill-box; transform-origin: left; }
@@ -6,8 +6,9 @@
   .dot { animation: pulse 1.4s ease-in-out infinite; }
   @keyframes fill { 0% { transform: scaleX(.08); } 70% { transform: scaleX(1); } 100% { transform: scaleX(1); opacity: .35; } }
   @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .25; } }
+  .hx{animation:hx 4.4s linear 0.8s 1 both}@keyframes hx{0.00%{transform:translateX(-68.0px)}15.91%{transform:translateX(218.5px)}40.91%{transform:translateX(218.5px)}59.09%{transform:translateX(733.5px)}81.82%{transform:translateX(733.5px)}100.00%{transform:translateX(1020.0px)}}.hy{animation:hy 4.4s linear 0.8s 1 both}@keyframes hy{0.00%{transform:translateY(-10px);animation-timing-function:ease-out}7.95%{transform:translateY(-58px);animation-timing-function:ease-out}15.91%{transform:translateY(0px);animation-timing-function:ease-in}40.91%{transform:translateY(0px);animation-timing-function:ease-in}50.00%{transform:translateY(-60px);animation-timing-function:ease-out}59.09%{transform:translateY(0px);animation-timing-function:ease-in}81.82%{transform:translateY(0px);animation-timing-function:ease-in}90.91%{transform:translateY(-60px);animation-timing-function:ease-out}100.00%{transform:translateY(-10px);animation-timing-function:ease-out}}.shake0{animation:s0 4.4s linear 0.8s 1 both}@keyframes s0{0%,15.91%{transform:translate(0,0)}16.51%{transform:translate(-6px,3.0px)}17.31%{transform:translate(5px,2.5px)}18.11%{transform:translate(-4px,2.0px)}18.91%{transform:translate(3px,1.5px)}19.71%{transform:translate(-1px,0.5px)}20.51%{transform:translate(0px,0.0px)}100%{transform:translate(0,0)}}.shake1{animation:s1 4.4s linear 0.8s 1 both}@keyframes s1{0%,59.09%{transform:translate(0,0)}59.69%{transform:translate(-6px,3.0px)}60.49%{transform:translate(5px,2.5px)}61.29%{transform:translate(-4px,2.0px)}62.09%{transform:translate(3px,1.5px)}62.89%{transform:translate(-1px,0.5px)}63.69%{transform:translate(0px,0.0px)}100%{transform:translate(0,0)}}
 </style>
-<g transform="translate(1.0,1)">
+<g transform="translate(1.0,117)"><g class="shake0">
   <clipPath id="c0"><rect width="483.0" height="188" rx="14"/></clipPath>
   <rect width="483.0" height="188" rx="14" fill="#0F172A"/>
   <rect width="8" height="188" fill="#F2C811" clip-path="url(#c0)"/>
@@ -24,8 +25,8 @@
   <rect x="30" y="134" width="423.0" height="10" rx="5" fill="#1E293B"/>
   <rect class="bar" x="30" y="134" width="423.0" height="10" rx="5" fill="#F2C811"/>
   <text class="t" x="30" y="168" font-size="12" fill="#94A3B8" letter-spacing="1">LEARNING IN PROGRESS</text>
-</g>
-<g transform="translate(516.0,1)">
+</g></g>
+<g transform="translate(516.0,117)"><g class="shake1">
   <clipPath id="c1"><rect width="483.0" height="188" rx="14"/></clipPath>
   <rect width="483.0" height="188" rx="14" fill="#0F172A"/>
   <rect width="8" height="188" fill="#3776AB" clip-path="url(#c1)"/>
@@ -42,5 +43,5 @@
   <rect x="30" y="134" width="423.0" height="10" rx="5" fill="#1E293B"/>
   <rect class="bar b2" x="30" y="134" width="423.0" height="10" rx="5" fill="#3776AB"/>
   <text class="t" x="30" y="168" font-size="12" fill="#94A3B8" letter-spacing="1">LEARNING IN PROGRESS</text>
-</g>
-</svg>
+</g></g>
+<g class="hx"><g class="hy"><g transform="translate(0,63)"><g shape-rendering="crispEdges"><rect x="15" y="0" width="18.3" height="3.3" fill="#111111"/><rect x="12" y="3" width="3.3" height="3.3" fill="#111111"/><rect x="15" y="3" width="18.3" height="3.3" fill="#22C55E"/><rect x="33" y="3" width="3.3" height="3.3" fill="#111111"/><rect x="12" y="6" width="6.3" height="3.3" fill="#22C55E"/><rect x="18" y="6" width="3.3" height="3.3" fill="#BBF7D0"/><rect x="21" y="6" width="6.3" height="3.3" fill="#22C55E"/><rect x="27" y="6" width="3.3" height="3.3" fill="#BBF7D0"/><rect x="30" y="6" width="6.3" height="3.3" fill="#22C55E"/><rect x="12" y="9" width="24.3" height="3.3" fill="#22C55E"/><rect x="12" y="12" width="3.3" height="3.3" fill="#22C55E"/><rect x="15" y="12" width="3.3" height="3.3" fill="#15803D"/><rect x="18" y="12" width="12.3" height="3.3" fill="#0A0A0A"/><rect x="30" y="12" width="3.3" height="3.3" fill="#15803D"/><rect x="33" y="12" width="3.3" height="3.3" fill="#22C55E"/><rect x="15" y="15" width="18.3" height="3.3" fill="#22C55E"/><rect x="6" y="18" width="36.3" height="3.3" fill="#22C55E"/><rect x="3" y="21" width="12.3" height="3.3" fill="#22C55E"/><rect x="15" y="21" width="3.3" height="3.3" fill="#15803D"/><rect x="18" y="21" width="12.3" height="3.3" fill="#22C55E"/><rect x="30" y="21" width="3.3" height="3.3" fill="#15803D"/><rect x="33" y="21" width="12.3" height="3.3" fill="#22C55E"/><rect x="0" y="24" width="48.3" height="3.3" fill="#22C55E"/><rect x="0" y="27" width="9.3" height="3.3" fill="#22C55E"/><rect x="12" y="27" width="6.3" height="3.3" fill="#22C55E"/><rect x="18" y="27" width="3.3" height="3.3" fill="#15803D"/><rect x="21" y="27" width="6.3" height="3.3" fill="#22C55E"/><rect x="27" y="27" width="3.3" height="3.3" fill="#15803D"/><rect x="30" y="27" width="6.3" height="3.3" fill="#22C55E"/><rect x="39" y="27" width="9.3" height="3.3" fill="#22C55E"/><rect x="0" y="30" width="9.3" height="3.3" fill="#22C55E"/><rect x="12" y="30" width="24.3" height="3.3" fill="#22C55E"/><rect x="39" y="30" width="9.3" height="3.3" fill="#22C55E"/><rect x="0" y="33" width="9.3" height="3.3" fill="#22C55E"/><rect x="12" y="33" width="24.3" height="3.3" fill="#22C55E"/><rect x="39" y="33" width="9.3" height="3.3" fill="#22C55E"/><rect x="0" y="36" width="3.3" height="3.3" fill="#15803D"/><rect x="3" y="36" width="3.3" height="3.3" fill="#22C55E"/><rect x="6" y="36" width="3.3" height="3.3" fill="#15803D"/><rect x="12" y="36" width="24.3" height="3.3" fill="#7C3AED"/><rect x="39" y="36" width="3.3" height="3.3" fill="#15803D"/><rect x="42" y="36" width="3.3" height="3.3" fill="#22C55E"/><rect x="45" y="36" width="3.3" height="3.3" fill="#15803D"/><rect x="12" y="39" width="24.3" height="3.3" fill="#7C3AED"/><rect x="12" y="42" width="9.3" height="3.3" fill="#7C3AED"/><rect x="27" y="42" width="9.3" height="3.3" fill="#7C3AED"/><rect x="12" y="45" width="6.3" height="3.3" fill="#7C3AED"/><rect x="30" y="45" width="6.3" height="3.3" fill="#7C3AED"/><rect x="12" y="48" width="6.3" height="3.3" fill="#22C55E"/><rect x="30" y="48" width="6.3" height="3.3" fill="#22C55E"/><rect x="9" y="51" width="9.3" height="3.3" fill="#22C55E"/><rect x="30" y="51" width="9.3" height="3.3" fill="#22C55E"/></g></g></g></g></svg>

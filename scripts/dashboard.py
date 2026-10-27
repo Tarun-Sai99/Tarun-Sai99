@@ -13,6 +13,7 @@ import urllib.request
 os.environ.setdefault("THEME", "pitwall")
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from make_svgs import BG, BAR, LINE, INK, SOFT, ACCENT, SANS, window, escape  # noqa: E402
+from sprites import BATMAN, pixels, size, GLOW_CSS  # noqa: E402
 
 QUERY = """query($login:String!){user(login:$login){
 repositories(ownerAffiliations:OWNER, privacy:PUBLIC){totalCount}
@@ -68,7 +69,8 @@ def monthly(days):
 
 
 def build(days, repos):
-    W, H = 1000, 430
+    W, H0, T = 1000, 430, 66  # T = room above the window for Batman to perch
+    H = H0 + T
     total = sum(c for _, c in days)
     active = sum(1 for _, c in days if c > 0)
     cur, best = streaks(days)
@@ -79,8 +81,11 @@ def build(days, repos):
            f'aria-label="Power BI style report: {total} contributions, {active} active days, current streak {cur} days, longest streak {best} days, {repos} public repositories">',
            '<style>.bar{transform-box:fill-box;transform-origin:bottom;animation:grow 1.2s ease-out both}'
            '@keyframes grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}'
-           '.tile{animation:fade .6s ease-out both}@keyframes fade{from{opacity:0}to{opacity:1}}</style>',
-           window(W, H, "github_activity.pbix  ·  Power BI")]
+           '.tile{animation:fade .6s ease-out both}@keyframes fade{from{opacity:0}to{opacity:1}}'
+           '.cape{animation:cape 1.4s steps(2) infinite}@keyframes cape{0%{transform:translateX(0)}50%{transform:translateX(-2px)}}'
+           f'{GLOW_CSS}</style>',
+           f'<g transform="translate(0,{T})">',
+           window(W, H0, "github_activity.pbix  ·  Power BI")]
     # report header with Power BI mark
     out.append(f'<g transform="translate(24,52)"><rect x="0" y="12" width="7" height="14" rx="1.5" fill="#E8B10A"/>'
                f'<rect x="9" y="6" width="7" height="20" rx="1.5" fill="{PBI_YELLOW}"/><rect x="18" y="0" width="7" height="26" rx="1.5" fill="#F7D84A"/></g>'
@@ -117,6 +122,12 @@ def build(days, repos):
         out.append(f'<text x="{bx + bw / 2:.1f}" y="{py0 + ph - h - 6:.1f}" text-anchor="middle" font-family="{SANS}" font-size="11" fill="{INK}">{v}</text>'
                    f'<text x="{bx + bw / 2:.1f}" y="{py0 + ph + 18:.1f}" text-anchor="middle" font-family="{SANS}" font-size="11" fill="{SOFT}">{name}</text>')
     out.append(f'<line x1="{px0}" x2="{px0 + pw}" y1="{py0 + ph}" y2="{py0 + ph}" stroke="{LINE}"/>')
+    out.append("</g>")
+    # Absolute Batman crouched on the window's roof, watching over the numbers
+    bpx = 4
+    bw, bh = size(BATMAN, bpx)
+    bx = W - 150
+    out.append(f'<g class="cape"><g transform="translate({bx},{T - bh + 3})">{pixels(BATMAN, bpx)}</g></g>')
     out.append("</svg>\n")
     return "".join(out)
 

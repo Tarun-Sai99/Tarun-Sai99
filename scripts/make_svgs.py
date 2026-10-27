@@ -6,6 +6,9 @@ import os
 import sys
 from xml.sax.saxutils import escape
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from sprites import SPIDER, SUPERMAN_BACK, HULK, DOOM, pixels, GLOW_CSS, size as sprite_size  # noqa: E402
+
 THEMES = {
     "cream": ("#F5ECDD", "#EADBC4", "#E3D3BD", "#5C4033", "#8C7B6B", "#A0674B"),
     "pitwall": ("#0F172A", "#1E293B", "#334155", "#E2E8F0", "#94A3B8", "#EF4444"),
@@ -99,8 +102,41 @@ def hero(path):
         f.write("".join(out))
 
 
+HULK_PX = 3
+
+
+def hulk_jump_css(cw, gap, W):
+    """One-shot jumps: in from the left, land on each card (it shakes), then leap off to the right."""
+    hw, _ = sprite_size(HULK, HULK_PX)
+    on0, on1 = cw / 2 - hw / 2, cw + gap + cw / 2 - hw / 2
+    total, delay = 4.4, 0.8
+    xs = [(0, -hw - 20), (0.7, on0), (1.8, on0), (2.6, on1), (3.6, on1), (4.4, W + 20)]
+    ys = [(0, -10), (0.35, -58), (0.7, 0), (1.8, 0), (2.2, -60), (2.6, 0), (3.6, 0), (4.0, -60), (4.4, -10)]
+
+    def pc(t):
+        return f"{t / total * 100:.2f}%"
+    kx = "".join(f"{pc(t)}{{transform:translateX({x:.1f}px)}}" for t, x in xs)
+    ky = "".join(f"{pc(t)}{{transform:translateY({y}px);animation-timing-function:{'ease-out' if y < 0 else 'ease-in'}}}"
+                 for t, y in ys)
+
+    def shake(t0):
+        a = t0 / total * 100
+        steps = [(0.6, -6), (1.4, 5), (2.2, -4), (3.0, 3), (3.8, -1), (4.6, 0)]
+        return (f"0%,{a:.2f}%{{transform:translate(0,0)}}"
+                + "".join(f"{a + d:.2f}%{{transform:translate({dx}px,{abs(dx) / 2:.1f}px)}}" for d, dx in steps)
+                + "100%{transform:translate(0,0)}")
+    anim = f"{total}s linear {delay}s 1 both"
+    return (f".hx{{animation:hx {anim}}}@keyframes hx{{{kx}}}"
+            f".hy{{animation:hy {anim}}}@keyframes hy{{{ky}}}"
+            f".shake0{{animation:s0 {anim}}}@keyframes s0{{{shake(0.7)}}}"
+            f".shake1{{animation:s1 {anim}}}@keyframes s1{{{shake(2.6)}}}")
+
+
 def exploring(path):
-    W, H = 1000, 190
+    W, CH, T = 1000, 190, 116  # T = headroom above the cards for the Hulk's jumps
+    H = CH + T
+    cw, gap = (W - 30) / 2, 30
+    hulk_css = hulk_jump_css(cw, gap, W)
     cards = [
         ("Power BI", "Interactive dashboards and", "advanced visualizations", "#F2C811", "pbi"),
         ("Python", "Deeper statistical analysis", "with Pandas and NumPy", "#3776AB", "py"),
@@ -112,7 +148,7 @@ def exploring(path):
         "py": '<path d="M24 0c-9 0-12 4-12 8v6h12v2H7c-5 0-7 4-7 10s3 10 7 10h5v-7c0-4 3-7 7-7h12c4 0 6-3 6-6V8c0-4-4-8-13-8z" fill="#3776AB"/><circle cx="18" cy="6" r="2" fill="#fff"/>'
               '<path d="M24 48c9 0 12-4 12-8v-6H24v-2h17c5 0 7-4 7-10s-3-10-7-10h-5v7c0 4-3 7-7 7H17c-4 0-6 3-6 6v8c0 4 4 8 13 8z" fill="#FFD43B"/><circle cx="30" cy="42" r="2" fill="#fff"/>',
     }
-    out = [f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" role="img" aria-label="Currently exploring: Power BI dashboards and deeper Python analysis">
+    out = [f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" role="img" aria-label="Currently exploring: Power BI dashboards and deeper Python analysis. The Hulk leaps from card to card.">
 <style>
   .t {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; }}
   .bar {{ animation: fill 3.2s ease-in-out infinite; transform-box: fill-box; transform-origin: left; }}
@@ -120,16 +156,16 @@ def exploring(path):
   .dot {{ animation: pulse 1.4s ease-in-out infinite; }}
   @keyframes fill {{ 0% {{ transform: scaleX(.08); }} 70% {{ transform: scaleX(1); }} 100% {{ transform: scaleX(1); opacity: .35; }} }}
   @keyframes pulse {{ 0%,100% {{ opacity: 1; }} 50% {{ opacity: .25; }} }}
+  {hulk_css}
 </style>
 ''']
-    cw, gap = (W - 30) / 2, 30
     for i, (name, l1, l2, color, icon) in enumerate(cards):
         x = i * (cw + gap)
-        out.append(f'''<g transform="translate({x + 1},1)">
-  <clipPath id="c{i}"><rect width="{cw - 2}" height="{H - 2}" rx="14"/></clipPath>
-  <rect width="{cw - 2}" height="{H - 2}" rx="14" fill="{BG}"/>
-  <rect width="8" height="{H - 2}" fill="{color}" clip-path="url(#c{i})"/>
-  <rect width="{cw - 2}" height="{H - 2}" rx="14" fill="none" stroke="{LINE}" stroke-width="2"/>
+        out.append(f'''<g transform="translate({x + 1},{T + 1})"><g class="shake{i}">
+  <clipPath id="c{i}"><rect width="{cw - 2}" height="{CH - 2}" rx="14"/></clipPath>
+  <rect width="{cw - 2}" height="{CH - 2}" rx="14" fill="{BG}"/>
+  <rect width="8" height="{CH - 2}" fill="{color}" clip-path="url(#c{i})"/>
+  <rect width="{cw - 2}" height="{CH - 2}" rx="14" fill="none" stroke="{LINE}" stroke-width="2"/>
   <g transform="translate(30,30)">{icons[icon]}</g>
   <text class="t" x="96" y="50" font-size="24" font-weight="700" fill="{INK}">{name}</text>
   <g transform="translate({cw - 150},34)">
@@ -142,8 +178,10 @@ def exploring(path):
   <rect x="30" y="134" width="{cw - 62}" height="10" rx="5" fill="{BAR}"/>
   <rect class="bar{' b2' if i else ''}" x="30" y="134" width="{cw - 62}" height="10" rx="5" fill="{color}"/>
   <text class="t" x="30" y="168" font-size="12" fill="{SOFT}" letter-spacing="1">LEARNING IN PROGRESS</text>
-</g>
+</g></g>
 ''')
+    hw, hh = sprite_size(HULK, HULK_PX)
+    out.append(f'<g class="hx"><g class="hy"><g transform="translate(0,{T - hh + 1})">{pixels(HULK, HULK_PX)}</g></g></g>')
     out.append("</svg>\n")
     with open(path, "w") as f:
         f.write("".join(out))
@@ -200,6 +238,13 @@ def theatre(path):
         off = 0 if row == 0 else 34
         for i in range(n):
             cx = 40 + off + i * 68
+            if row == 0 and i == 7:
+                # Absolute Superman watching from the front row; the seat back hides his lower half
+                px = 3
+                w, _ = sprite_size(SUPERMAN_BACK, px)
+                seats.append(f'<g class="sup"><g transform="translate({cx - w / 2},{yy - r - 34})">{pixels(SUPERMAN_BACK, px)}</g></g>'
+                             f'<rect x="{cx - r}" y="{yy - r * 0.6:.1f}" width="{2 * r}" height="{H - yy + r}" rx="{r * 0.7:.1f}" fill="{col}"/>')
+                continue
             seats.append(f'<circle cx="{cx}" cy="{yy - r}" r="{r * 0.62:.1f}" fill="{col}"/>'
                          f'<rect x="{cx - r}" y="{yy - r * 0.6:.1f}" width="{2 * r}" height="{H - yy + r}" rx="{r * 0.7:.1f}" fill="{col}"/>')
     svg = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" role="img" aria-label="Cinema screen rolling credits: Tarun Sai, Data Analyst. Tools: SQL, Python, Excel, Power BI. Focus: data cleaning and exploratory data analysis. Proddatur, Andhra Pradesh, India. Open to full-time roles and internships.">
@@ -208,6 +253,8 @@ def theatre(path):
   .beam {{ animation: flicker 3s ease-in-out infinite; }}
   @keyframes roll {{ from {{ transform: translateY({start}px); }} to {{ transform: translateY({end}px); }} }}
   @keyframes flicker {{ 0%,100% {{ opacity: .9; }} 45% {{ opacity: .75; }} 50% {{ opacity: .95; }} 70% {{ opacity: .8; }} }}
+  .sup {{ animation: nod 6s ease-in-out infinite; transform-box: fill-box; transform-origin: bottom; }}
+  @keyframes nod {{ 0%,70%,100% {{ transform: rotate(0); }} 78% {{ transform: rotate(-4deg); }} 86% {{ transform: rotate(3deg); }} }}
 </style>
 <defs>
   <radialGradient id="hall" cx="50%" cy="40%" r="70%"><stop offset="0" stop-color="#1A1426"/><stop offset="1" stop-color="#07060B"/></radialGradient>
@@ -313,15 +360,25 @@ def notebook(path, projects):
     rows_y0 = 236
     H = rows_y0 + 46 * len(projects) + 50
     out = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" role="img" aria-label="Google Colab notebook listing Tarun\'s projects with pandas">',
-           '<style>.spin{animation:spin 1s linear infinite;transform-box:fill-box;transform-origin:center}@keyframes spin{to{transform:rotate(360deg)}}</style>',
+           '<style>.spin{animation:spin 1s linear infinite;transform-box:fill-box;transform-origin:center}@keyframes spin{to{transform:rotate(360deg)}}'
+           '.yo{animation:yo 3.2s ease-in-out infinite}@keyframes yo{0%,100%{transform:translateY(0)}50%{transform:translateY(22px)}}'
+           f'{GLOW_CSS}</style>',
            window(W, H, "tarun_projects.ipynb  ·  Google Colab")]
+    # Midnight Spider-Man hanging upside down on a web, beside the code cell
+    spx = 4
+    sw_, sh_ = sprite_size(SPIDER, spx)
+    spx0 = W - 40 - sw_
+    out.append(f'<clipPath id="belowbar"><rect x="0" y="38" width="{W}" height="{H}"/></clipPath>'
+               f'<g clip-path="url(#belowbar)"><g class="yo">'
+               f'<line x1="{spx0 + sw_ / 2}" x2="{spx0 + sw_ / 2}" y1="-60" y2="62" stroke="#E2E8F0" stroke-width="1.5" opacity=".8"/>'
+               f'<g transform="translate({spx0},60)">{pixels(SPIDER, spx, flip=True)}</g></g></g>')
     # Colab logo + menu
     out.append(f'<g transform="translate(24,54)"><circle cx="9" cy="9" r="8" fill="none" stroke="#F9AB00" stroke-width="4"/><circle cx="25" cy="9" r="8" fill="none" stroke="#F9AB00" stroke-width="4" opacity=".8"/></g>'
                f'<text x="70" y="69" font-family="{SANS}" font-size="15" fill="{INK}" font-weight="600">tarun_projects.ipynb</text>'
                f'<text x="70" y="88" font-family="{SANS}" font-size="12" fill="{SOFT}" word-spacing="10">File Edit View Insert Runtime Tools Help</text>'
                f'<line x1="1" x2="{W - 1}" y1="100" y2="100" stroke="{LINE}"/>')
     # code cell
-    out.append(f'<rect x="64" y="114" width="{W - 90}" height="86" rx="8" fill="{BAR}" stroke="{LINE}"/>')
+    out.append(f'<rect x="64" y="114" width="{W - 230}" height="86" rx="8" fill="{BAR}" stroke="{LINE}"/>')
     # run button: spinner then [1]
     run_t, show_t = 1.0, 2.2
     def vis(a, b):
@@ -369,7 +426,9 @@ def excel(path, rows):
     rh = 34
     colA, colB = 60, 260  # x where columns A and B start
     H = top + rh * (len(rows) + 1) + 70
-    out = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" role="img" aria-label="Excel sheet of Tarun\'s interests beyond data">',
+    out = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" role="img" aria-label="Excel sheet of Tarun\'s interests beyond data, with Doctor Doom moving the cell cursor">',
+           f'<style>{GLOW_CSS}.bolt{{animation:bolt .5s steps(2) infinite}}@keyframes bolt{{0%{{opacity:1}}50%{{opacity:.45}}}}'
+           '.hover{animation:hover 2.6s ease-in-out infinite}@keyframes hover{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}</style>',
            window(W, H, "beyond_data.xlsx  ·  Excel", bar_color=green, title_color="#E8F5EE")]
     # ribbon tabs
     tabs = ["File", "Home", "Insert", "Page Layout", "Formulas", "Data", "Review", "View"]
@@ -383,10 +442,10 @@ def excel(path, rows):
     # formula bar
     out.append(f'<rect x="16" y="82" width="70" height="28" rx="4" fill="{BAR}" stroke="{LINE}"/>'
                f'<text x="100" y="101" font-family="Georgia, serif" font-style="italic" font-size="15" fill="{SOFT}">fx</text>'
-               f'<rect x="124" y="82" width="{W - 140}" height="28" rx="4" fill="{BAR}" stroke="{LINE}"/>'
+               f'<rect x="124" y="82" width="{W - 200 - 124}" height="28" rx="4" fill="{BAR}" stroke="{LINE}"/>'
                f'<text x="136" y="101" font-family="{FONT}" font-size="14" fill="{INK}">=COUNTIF(life, <tspan fill="#33C481">"curious"</tspan>)</text>')
     # headers
-    gx0, gx1 = 16, W - 16
+    gx0, gx1 = 16, W - 200
     out.append(f'<rect x="{gx0}" y="{top - 22}" width="{gx1 - gx0}" height="22" fill="{BAR}"/>')
     for label, cx in (("A", (colA + colB) / 2), ("B", (colB + gx1) / 2)):
         out.append(f'<text x="{cx}" y="{top - 6}" text-anchor="middle" font-family="{SANS}" font-size="12" fill="{SOFT}">{label}</text>')
@@ -424,6 +483,31 @@ def excel(path, rows):
                    f'<animate attributeName="opacity" dur="{DUR}s" repeatCount="indefinite" calcMode="discrete" keyTimes="{t2}" values="{v2}"/></text>')
     out.append(f'<rect x="{colB}" y="{top + rh}" width="{gx1 - colB}" height="{rh}" fill="none" stroke="#33C481" stroke-width="2.5">'
                f'<animate attributeName="y" dur="{DUR}s" repeatCount="indefinite" calcMode="discrete" keyTimes="{tt}" values="{vv}"/></rect>')
+    # Doctor Doom beside the sheet; his green bolt points at the selected cell
+    dpx = 5
+    dw, dh = sprite_size(DOOM, dpx)
+    dx, dy = W - 24 - dw, top + rh * len(all_rows) - dh
+    hand_x, hand_y = dx, dy + 9.5 * dpx
+    out.append(f'<ellipse cx="{dx + dw * 0.6}" cy="{dy + dh + 2}" rx="40" ry="5" fill="#000" opacity=".35"/>'
+               f'<g class="hover"><g transform="translate({dx},{dy})">{pixels(DOOM, dpx)}</g></g>')
+    for k in range(len(rows)):
+        a0 = 0 if k == 0 else 0.5 + k * per
+        a1 = 0.5 + (k + 1) * per if k < len(rows) - 1 else DUR
+        if k == 0:
+            t2, v2 = kt((0, 1), (0.5 + per, 0), (DUR, 0))
+        else:
+            t2, v2 = kt((0, 0), (a0, 1), (a1, 0), (DUR, 0)) if a1 < DUR else kt((0, 0), (a0, 1), (DUR, 1))
+        ty_ = top + rh * (k + 1) + rh / 2
+        pts = []
+        n_seg = 6
+        for j in range(n_seg + 1):
+            fx = hand_x + (gx1 + 3 - hand_x) * j / n_seg
+            fy = hand_y + (ty_ - hand_y) * j / n_seg + (0 if j in (0, n_seg) else (7 if j % 2 else -7))
+            pts.append(f"{fx:.1f},{fy:.1f}")
+        out.append(f'<g opacity="{1 if k == 0 else 0}"><animate attributeName="opacity" dur="{DUR}s" repeatCount="indefinite" calcMode="discrete" keyTimes="{t2}" values="{v2}"/>'
+                   f'<g class="bolt"><polyline points="{" ".join(pts)}" fill="none" stroke="#4ADE80" stroke-width="5" opacity=".35" stroke-linejoin="round"/>'
+                   f'<polyline points="{" ".join(pts)}" fill="none" stroke="#BBF7D0" stroke-width="2" stroke-linejoin="round"/></g>'
+                   f'<circle cx="{hand_x}" cy="{hand_y}" r="7" fill="#4ADE80" opacity=".45"/></g>')
     # sheet tabs
     sy = top + rh * len(all_rows) + 14
     out.append(f'<rect x="{gx0}" y="{sy}" width="140" height="26" fill="{BAR}" stroke="{LINE}"/>'

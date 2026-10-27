@@ -13,6 +13,8 @@ import os
 import sys
 import urllib.request
 
+from sprites import GHOST_RIDER, pixels, size, GLOW_CSS
+
 CELL, GAP = 11, 3
 STEP = CELL + GAP
 PAD_X, PAD_TOP, PAD_BOTTOM = 36, 30, 34
@@ -22,6 +24,9 @@ PURPLE_T = 0.018   # seconds per best-day (purple) square
 PURPLE = {"light": "#8250df", "dark": "#b07cff"}
 TURN_T = 0.12      # seconds for a turn between rows
 FINISH_T = 1.2     # pause after the lap before restarting
+GR_PX = 3          # Ghost Rider pixel size
+GR_W = 66          # room on the left for Ghost Rider
+IGNITE_T = 1.6     # seconds for his fire to run round the border
 
 THEMES = {
     "light": {"bg": "#ffffff", "levels": ["#ebedf0", "#9be9a8", "#40c463", "#30a14e", "#216e39"],
@@ -99,7 +104,7 @@ def build(weeks, theme):
     best = best_days(weeks)
     cols = len(weeks)
     grid_w = cols * STEP - GAP
-    width = grid_w + 2 * PAD_X
+    width = grid_w + 2 * PAD_X + GR_W
     height = PAD_TOP + 7 * STEP - GAP + PAD_BOTTOM
 
     def cx(col):
@@ -194,7 +199,41 @@ def build(weeks, theme):
     for row, name in ((1, "Mon"), (3, "Wed"), (5, "Fri")):
         labels.append(f'<text x="{PAD_X - 6}" y="{cy(row) + 4}" text-anchor="end" style="font-size:10px">{name}</text>')
     total = sum(n for w in weeks for _, n, *_ in w)
-    return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" width="{width}" height="{height}" role="img" aria-label="F1 car lapping the contribution graph">
+
+    # Ghost Rider's fire: two flames leave him, run round the grid border
+    # (one over the top, one under the bottom) and meet on the right.
+    fx0, fy0 = GR_W + 2, PAD_TOP - 5
+    fx1, fy1 = GR_W + PAD_X + grid_w + 7, PAD_TOP + 7 * STEP - GAP + 5
+    my = (fy0 + fy1) / 2
+    half = (fx1 - fx0) + (fy1 - fy0)
+    up = f"M{fx0} {my} V{fy0} H{fx1} V{my}"
+    down = f"M{fx0} {my} V{fy1} H{fx1} V{my}"
+    lit = (lap - FINISH_T) / lap * 100
+    ign = IGNITE_T / lap * 100
+    fire_css = (f".ign{{stroke-dasharray:{half:.0f};animation:ign {lap:.2f}s linear infinite}}"
+                f"@keyframes ign{{0%{{stroke-dashoffset:{half:.0f};opacity:1}}{ign:.2f}%{{stroke-dashoffset:0;opacity:1}}"
+                f"{lit:.2f}%{{stroke-dashoffset:0;opacity:1}}100%{{stroke-dashoffset:0;opacity:0}}}}"
+                f".burn{{animation:burn {lap:.2f}s linear infinite}}"
+                f"@keyframes burn{{0%,{ign:.2f}%{{opacity:0}}{ign + 0.5:.2f}%,{lit:.2f}%{{opacity:1}}100%{{opacity:0}}}}"
+                f".crawl{{stroke-dasharray:7 5 3 6;animation:crawl .9s linear infinite}}"
+                f"@keyframes crawl{{to{{stroke-dashoffset:-21}}}}"
+                f".jet{{animation:jet {lap:.2f}s linear infinite}}"
+                f"@keyframes jet{{0%,{ign:.2f}%{{opacity:1}}{ign + 2:.2f}%,100%{{opacity:0}}}}"
+                + GLOW_CSS)
+    gw, gh = size(GHOST_RIDER, GR_PX)
+    gx, gy = 6, my - gh / 2
+    fire = f"""<defs><filter id="blur" x="-5%" y="-30%" width="110%" height="160%"><feGaussianBlur stdDeviation="2.2"/></filter></defs>
+<g class="ign" fill="none" stroke-linejoin="round">
+  <path d="{up}" stroke="#F97316" stroke-width="6" filter="url(#blur)"/><path d="{down}" stroke="#F97316" stroke-width="6" filter="url(#blur)"/>
+  <path d="{up}" stroke="#FACC15" stroke-width="2"/><path d="{down}" stroke="#FACC15" stroke-width="2"/>
+</g>
+<g class="burn" fill="none"><g class="crawl">
+  <path d="{up}" stroke="#FDE68A" stroke-width="2.5"/><path d="{down}" stroke="#FDE68A" stroke-width="2.5"/>
+</g></g>
+<g class="jet"><path d="M{gx + gw - 6} {my - 6} Q{(gx + gw + fx0) / 2} {my - 14} {fx0} {my}" fill="none" stroke="#F97316" stroke-width="4" filter="url(#blur)"/>
+<path d="M{gx + gw - 6} {my - 6} Q{(gx + gw + fx0) / 2} {my - 14} {fx0} {my}" fill="none" stroke="#FACC15" stroke-width="1.5"/></g>
+<g transform="translate({gx},{gy:.1f})">{pixels(GHOST_RIDER, GR_PX)}</g>"""
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" width="{width}" height="{height}" role="img" aria-label="F1 car lapping the contribution graph while Ghost Rider sets its border on fire">
 <style>
 .car{{animation:lap {lap:.2f}s linear infinite}}
 @keyframes lap{{{''.join(move)}}}
@@ -203,23 +242,27 @@ def build(weeks, theme):
 @keyframes drs{{{drs_frames}}}
 @keyframes fs{{{purple_frames}}}
 {''.join(flash_css)}
+{fire_css}
 text{{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;font-size:11px;fill:{t['text']}}}
 </style>
 <rect width="{width}" height="{height}" rx="6" fill="{t['bg']}"/>
+{fire}
+<g transform="translate({GR_W},0)">
 {''.join(cells)}
 {''.join(labels)}
 <text x="{PAD_X}" y="{by + 12}">{total} contributions in the last year · green opens DRS · purple = fastest sector (best days)</text>
-<g transform="translate({width - PAD_X - 44},{by})">
+<g transform="translate({width - GR_W - PAD_X - 44},{by})">
   <rect width="44" height="16" rx="3" fill="{t['panel']}" stroke="{t['border']}"/>
   <text x="22" y="12" text-anchor="middle" style="font-weight:700">DRS</text>
   <g class="drs-on"><rect width="44" height="16" rx="3" fill="#2ea043"/><text x="22" y="12" text-anchor="middle" style="font-weight:700;fill:#fff">DRS</text></g>
 </g>
-<g transform="translate({width - PAD_X - 44 - 8 - 104},{by})">
+<g transform="translate({width - GR_W - PAD_X - 44 - 8 - 104},{by})">
   <rect width="104" height="16" rx="3" fill="{t['panel']}" stroke="{t['border']}"/>
   <text x="52" y="12" text-anchor="middle" style="font-weight:700">FASTEST SECTOR</text>
   <g class="fs-on"><rect width="104" height="16" rx="3" fill="{PURPLE[theme]}"/><text x="52" y="12" text-anchor="middle" style="font-weight:700;fill:#fff">FASTEST SECTOR</text></g>
 </g>
 <g class="car"><g transform="scale(1.6)">{car_svg()}</g></g>
+</g>
 </svg>
 """
 

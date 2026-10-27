@@ -336,6 +336,9 @@ def notebook(path, projects):
         parts = []
         for tok, col in toks:
             parts.append(f'<tspan fill="{col}">{escape(tok)}</tspan>')
+        if i == len(code) - 1:  # blinking cursor after the last line
+            parts.append(f'<tspan fill="{INK}">▌<animate attributeName="fill-opacity" values="1;0" dur="1.1s" '
+                         f'calcMode="discrete" repeatCount="indefinite"/></tspan>')
         out.append(f'<text x="{x}" y="{138 + i * 22}" font-family="{FONT}" font-size="15" xml:space="preserve">{"".join(parts)}</text>')
     # output table
     out.append(f'<g opacity="0">{vis(show_t, DUR)}')

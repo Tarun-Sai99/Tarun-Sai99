@@ -156,9 +156,11 @@ def theatre(path):
     serif = "Georgia, 'Times New Roman', serif"
     sans = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
     credits = [
-        ("small", "TARUN-SAI99 PICTURES PRESENTS"),
+        ("small", "GITHUB STUDIOS PRESENTS"),
         ("gap", 30),
         ("title", "TARUN SAI"),
+        ("handle", "@Tarun-Sai99"),
+        ("gap", 10),
         ("small", "IN"),
         ("sub", "A Data Analyst Story"),
         ("gap", 60),
@@ -174,6 +176,7 @@ def theatre(path):
         "small": (13, sans, "#9CA3AF", 600, 4, 30),
         "title": (52, serif, "#F8FAFC", 700, 6, 62),
         "sub": (22, serif, "#E5E7EB", 400, 1, 34),
+        "handle": (16, FONT, "#EF4444", 600, 2, 30),
         "label": (12, sans, "#EF4444", 700, 4, 50),
         "name": (21, serif, "#F8FAFC", 400, 0, 28),
     }
@@ -236,39 +239,56 @@ def theatre(path):
 
 
 def outro(path):
-    """Small closing terminal that ends the SQL session."""
-    W, H, X0, Y0, LH = 1000, 150, 32, 78, 28
-    cmd = "exit;"
-    prompt = "mysql>"
-    qx = X0 + 7 * CW
-    t0, per = 0.8, 0.12
-    t_end = t0 + len(cmd) * per
+    """Closing terminal: commits the visit, exits, and teases a post-credits scene."""
+    W, X0, Y0, LH = 1000, 32, 78, 28
+    lines = [
+        # (start time, prompt?, text, colour, typed?)
+        (0.8, True, "COMMIT;", INK, True),
+        (2.0, False, "Query OK, 1 visit recorded. Thanks for watching. (0.00 sec)", INK, False),
+        (3.2, True, "exit;", INK, True),
+        (4.2, False, "Session closed.", SOFT, False),
+        (5.0, False, "[ POST-CREDITS SCENE ]  next project loading", ACCENT, False),
+    ]
+    H = Y0 + LH * (len(lines) - 1) + 30
     hold = DUR - 0.8
-    steps = [(0, 0), (t0, 0)] + [(t0 + i * per, i * CW) for i in range(1, len(cmd) + 1)] + [(hold, len(cmd) * CW), (DUR, 0)]
-    times, vals = kt(*steps)
+    per = 0.1
+    qx = X0 + 7 * CW
 
     def show(t):
         tt, vv = kt((0, 0), (t, 0), (t + 0.01, 1), (hold, 1), (DUR, 0))
         return f'<animate attributeName="opacity" dur="{DUR}s" repeatCount="indefinite" calcMode="discrete" keyTimes="{tt}" values="{vv}"/>'
-    svg = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" role="img" aria-label="mysql> exit; Bye! Thanks for visiting.">
-<defs><clipPath id="typed2"><rect x="{qx}" y="{Y0 - 20}" height="28" width="0">
-  <animate attributeName="width" dur="{DUR}s" repeatCount="indefinite" calcMode="discrete" keyTimes="{times}" values="{vals}"/>
-</rect></clipPath></defs>
+
+    defs, body = [], []
+    for i, (t, is_cmd, text, color, typed) in enumerate(lines):
+        y = Y0 + i * LH
+        if is_cmd:
+            steps = [(0, 0), (t, 0)] + [(t + k * per, k * CW) for k in range(1, len(text) + 1)] + [(hold, len(text) * CW), (DUR, 0)]
+            tt, vv = kt(*steps)
+            defs.append(f'<clipPath id="ty{i}"><rect x="{qx}" y="{y - 20}" height="28" width="0"><animate attributeName="width" dur="{DUR}s" repeatCount="indefinite" calcMode="discrete" keyTimes="{tt}" values="{vv}"/></rect></clipPath>')
+            body.append(f'<g opacity="0">{show(t - 0.3)}<text x="{X0}" y="{y}" fill="{ACCENT}" font-weight="700">mysql&gt;</text>'
+                        f'<text x="{qx}" y="{y}" fill="{color}" clip-path="url(#ty{i})" textLength="{len(text) * CW}" lengthAdjust="spacingAndGlyphs">{escape(text)}</text></g>')
+        else:
+            extra = ""
+            if text.startswith("[ POST"):
+                bx = X0 + (len(text) + 2) * CW
+                extra = (f'<rect x="{bx}" y="{y - 13}" width="150" height="14" rx="3" fill="{BAR}" stroke="{LINE}"/>'
+                         f'<rect x="{bx + 2}" y="{y - 11}" width="0" height="10" rx="2" fill="{ACCENT}">'
+                         f'<animate attributeName="width" values="0;146;146" keyTimes="0;0.8;1" dur="3s" repeatCount="indefinite"/></rect>'
+                         f'<text x="{bx + 160}" y="{y}" fill="{ACCENT}">...</text>')
+            body.append(f'<g opacity="0">{show(t)}<text x="{X0}" y="{y}" fill="{color}" font-weight="{700 if extra else 400}">{escape(text)}</text>{extra}</g>')
+    svg = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" role="img" aria-label="mysql> COMMIT; Query OK, 1 visit recorded. Thanks for watching. mysql> exit; Session closed. Post-credits scene: next project loading.">
+<defs>{"".join(defs)}</defs>
 <rect x="1" y="1" width="{W - 2}" height="{H - 2}" rx="14" fill="{BG}" stroke="{LINE}" stroke-width="2"/>
 <path d="M1 15 Q1 1 15 1 H{W - 15} Q{W - 1} 1 {W - 1} 15 V38 H1 Z" fill="{BAR}"/>
 <circle cx="24" cy="20" r="6.5" fill="#E07A5F"/><circle cx="46" cy="20" r="6.5" fill="#E9B44C"/><circle cx="68" cy="20" r="6.5" fill="#81B29A"/>
 <text x="{W / 2}" y="25" text-anchor="middle" font-family="{FONT}" font-size="14" fill="{SOFT}">tarun@profile: ~ mysql</text>
 <g font-family="{FONT}" font-size="17">
-<text x="{X0}" y="{Y0}" fill="{ACCENT}" font-weight="700">{escape(prompt)}</text>
-<text x="{qx}" y="{Y0}" fill="{INK}" clip-path="url(#typed2)" textLength="{len(cmd) * CW}" lengthAdjust="spacingAndGlyphs">{cmd}</text>
-<g opacity="0">{show(t_end + 0.4)}<text x="{X0}" y="{Y0 + LH}" fill="{INK}">Bye! Thanks for visiting.</text></g>
-<g opacity="0">{show(t_end + 1.0)}<text x="{X0}" y="{Y0 + 2 * LH - 4}" fill="{SOFT}" font-size="14">[session closed · see you at the next commit]</text></g>
+{"".join(body)}
 </g>
 </svg>
 '''
     with open(path, "w") as f:
         f.write(svg)
-
 
 if __name__ == "__main__":
     out = sys.argv[1]

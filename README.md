@@ -1,4 +1,4 @@
-<img src="assets/hero.svg" alt="MySQL terminal showing Tarun Sai's profile: Data Analyst, SQL, Python, Excel, Power BI" width="100%" />
+<img src="assets/theatre.svg" alt="Cinema screen rolling credits: Tarun Sai, Data Analyst. SQL, Python, Excel, Power BI. Open to full-time roles and internships." width="100%" />
 
 <p align="center">
   <a href="#featured-projects"><img src="https://img.shields.io/badge/Projects-E07A5F?style=for-the-badge" alt="Projects" /></a>
@@ -110,7 +110,7 @@ Cleaned and analyzed 75+ years of Formula 1 race data (1950–2026) in MySQL, fi
   <img alt="F1 car lapping my contribution graph, with DRS on every green square" src="https://raw.githubusercontent.com/Tarun-Sai99/Tarun-Sai99/output/f1-contrib-dark.svg" width="100%" />
 </picture>
 
-<p align="center"><i>Clean data. Clear questions. Insights that hold up.</i></p>
+<img src="assets/outro.svg" alt="mysql> exit; Bye! Thanks for visiting." width="100%" />
 
 <p align="center">
   <img src="https://komarev.com/ghpvc/?username=Tarun-Sai99&label=Profile%20views&color=ef4444&style=flat" alt="Profile views" />

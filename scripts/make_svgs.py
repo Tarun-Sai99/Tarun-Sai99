@@ -149,8 +149,131 @@ def exploring(path):
         f.write("".join(out))
 
 
+def theatre(path):
+    """Cinema screen with curtains; the profile rolls up like end credits."""
+    W, H = 1000, 420
+    sx, sy, sw, sh = 165, 62, 670, 250
+    serif = "Georgia, 'Times New Roman', serif"
+    sans = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
+    credits = [
+        ("small", "TARUN-SAI99 PICTURES PRESENTS"),
+        ("gap", 30),
+        ("title", "TARUN SAI"),
+        ("small", "IN"),
+        ("sub", "A Data Analyst Story"),
+        ("gap", 60),
+        ("label", "STARRING"), ("name", "Tarun Sai as the Data Analyst"),
+        ("label", "TOOLS OF THE TRADE"), ("name", "SQL · Python · Excel · Power BI"),
+        ("label", "SPECIAL FOCUS"), ("name", "Data Cleaning · Exploratory Data Analysis"),
+        ("label", "FILMED ON LOCATION IN"), ("name", "Proddatur, Andhra Pradesh, India"),
+        ("label", "NOW CASTING"), ("name", "Open to full-time roles and internships"),
+        ("gap", 40),
+        ("small", "THE END?  NOT YET."),
+    ]
+    style = {
+        "small": (13, sans, "#9CA3AF", 600, 4, 30),
+        "title": (52, serif, "#F8FAFC", 700, 6, 62),
+        "sub": (22, serif, "#E5E7EB", 400, 1, 34),
+        "label": (12, sans, "#EF4444", 700, 4, 50),
+        "name": (21, serif, "#F8FAFC", 400, 0, 28),
+    }
+    y, lines = 0, []
+    for kind, val in credits:
+        if kind == "gap":
+            y += val
+            continue
+        size, font, color, weight, ls, adv = style[kind]
+        y += adv if kind != "title" else adv - 10
+        lines.append(f'<text x="{W / 2}" y="{y}" text-anchor="middle" font-family="{font}" font-size="{size}" '
+                     f'font-weight="{weight}" letter-spacing="{ls}" fill="{color}">{escape(val)}</text>')
+    total = y + 20
+    roll = 22  # seconds per pass
+    start, end = sy + sh + 10, sy - total
+    folds = "".join(
+        f'<stop offset="{i / 10:.2f}" stop-color="{"#7A0E19" if i % 2 else "#B3192A"}"/>' for i in range(11))
+    seats = []
+    for row, (yy, r, col) in enumerate([(372, 17, "#07080D"), (398, 19, "#040509")]):
+        n = 15 if row == 0 else 14
+        off = 0 if row == 0 else 34
+        for i in range(n):
+            cx = 40 + off + i * 68
+            seats.append(f'<circle cx="{cx}" cy="{yy - r}" r="{r * 0.62:.1f}" fill="{col}"/>'
+                         f'<rect x="{cx - r}" y="{yy - r * 0.6:.1f}" width="{2 * r}" height="{H - yy + r}" rx="{r * 0.7:.1f}" fill="{col}"/>')
+    svg = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" role="img" aria-label="Cinema screen rolling credits: Tarun Sai, Data Analyst. Tools: SQL, Python, Excel, Power BI. Focus: data cleaning and exploratory data analysis. Proddatur, Andhra Pradesh, India. Open to full-time roles and internships.">
+<style>
+  .roll {{ animation: roll {roll}s linear infinite; }}
+  .beam {{ animation: flicker 3s ease-in-out infinite; }}
+  @keyframes roll {{ from {{ transform: translateY({start}px); }} to {{ transform: translateY({end}px); }} }}
+  @keyframes flicker {{ 0%,100% {{ opacity: .9; }} 45% {{ opacity: .75; }} 50% {{ opacity: .95; }} 70% {{ opacity: .8; }} }}
+</style>
+<defs>
+  <radialGradient id="hall" cx="50%" cy="40%" r="70%"><stop offset="0" stop-color="#1A1426"/><stop offset="1" stop-color="#07060B"/></radialGradient>
+  <linearGradient id="curtain" x1="0" x2="1">{folds}</linearGradient>
+  <linearGradient id="shade" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".55"/></linearGradient>
+  <linearGradient id="beamG" x1="0" x2="0" y1="1" y2="0"><stop offset="0" stop-color="#FDE68A" stop-opacity=".35"/><stop offset="1" stop-color="#FDE68A" stop-opacity="0"/></linearGradient>
+  <radialGradient id="screenG" cx="50%" cy="45%" r="65%"><stop offset="0" stop-color="#151B2B"/><stop offset="1" stop-color="#05070C"/></radialGradient>
+  <clipPath id="screen"><rect x="{sx}" y="{sy}" width="{sw}" height="{sh}" rx="4"/></clipPath>
+  <clipPath id="hallC"><rect width="{W}" height="{H}" rx="14"/></clipPath>
+</defs>
+<g clip-path="url(#hallC)">
+<rect width="{W}" height="{H}" fill="url(#hall)"/>
+<rect x="{sx - 18}" y="{sy - 18}" width="{sw + 36}" height="{sh + 36}" rx="14" fill="#93C5FD" opacity=".05"/>
+<rect x="{sx - 4}" y="{sy - 4}" width="{sw + 8}" height="{sh + 8}" rx="6" fill="#1F2937"/>
+<rect x="{sx}" y="{sy}" width="{sw}" height="{sh}" rx="4" fill="url(#screenG)"/>
+<g clip-path="url(#screen)"><g class="roll">{"".join(lines)}</g></g>
+<path d="M0 0 H150 Q140 200 120 {H} H0 Z" fill="url(#curtain)"/>
+<path d="M{W} 0 H{W - 150} Q{W - 140} 200 {W - 120} {H} H{W} Z" fill="url(#curtain)"/>
+<path d="M0 0 H150 Q140 200 120 {H} H0 Z M{W} 0 H{W - 150} Q{W - 140} 200 {W - 120} {H} H{W} Z" fill="url(#shade)"/>
+<path d="M0 0 H{W} V30 {"".join(f"Q{W - i * 100 - 50} 58 {W - (i + 1) * 100} 30 " for i in range(10))}Z" fill="#9B1424"/>
+<path d="M0 0 H{W} V12 H0 Z" fill="#5E0A14"/>
+<polygon class="beam" points="{W / 2 - 8},{H} {W / 2 + 8},{H} {sx + sw - 40},{sy + sh} {sx + 40},{sy + sh}" fill="url(#beamG)"/>
+{"".join(seats)}
+</g>
+</svg>
+'''
+    with open(path, "w") as f:
+        f.write(svg)
+
+
+def outro(path):
+    """Small closing terminal that ends the SQL session."""
+    W, H, X0, Y0, LH = 1000, 150, 32, 78, 28
+    cmd = "exit;"
+    prompt = "mysql>"
+    qx = X0 + 7 * CW
+    t0, per = 0.8, 0.12
+    t_end = t0 + len(cmd) * per
+    hold = DUR - 0.8
+    steps = [(0, 0), (t0, 0)] + [(t0 + i * per, i * CW) for i in range(1, len(cmd) + 1)] + [(hold, len(cmd) * CW), (DUR, 0)]
+    times, vals = kt(*steps)
+
+    def show(t):
+        tt, vv = kt((0, 0), (t, 0), (t + 0.01, 1), (hold, 1), (DUR, 0))
+        return f'<animate attributeName="opacity" dur="{DUR}s" repeatCount="indefinite" calcMode="discrete" keyTimes="{tt}" values="{vv}"/>'
+    svg = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" role="img" aria-label="mysql> exit; Bye! Thanks for visiting.">
+<defs><clipPath id="typed2"><rect x="{qx}" y="{Y0 - 20}" height="28" width="0">
+  <animate attributeName="width" dur="{DUR}s" repeatCount="indefinite" calcMode="discrete" keyTimes="{times}" values="{vals}"/>
+</rect></clipPath></defs>
+<rect x="1" y="1" width="{W - 2}" height="{H - 2}" rx="14" fill="{BG}" stroke="{LINE}" stroke-width="2"/>
+<path d="M1 15 Q1 1 15 1 H{W - 15} Q{W - 1} 1 {W - 1} 15 V38 H1 Z" fill="{BAR}"/>
+<circle cx="24" cy="20" r="6.5" fill="#E07A5F"/><circle cx="46" cy="20" r="6.5" fill="#E9B44C"/><circle cx="68" cy="20" r="6.5" fill="#81B29A"/>
+<text x="{W / 2}" y="25" text-anchor="middle" font-family="{FONT}" font-size="14" fill="{SOFT}">tarun@profile: ~ mysql</text>
+<g font-family="{FONT}" font-size="17">
+<text x="{X0}" y="{Y0}" fill="{ACCENT}" font-weight="700">{escape(prompt)}</text>
+<text x="{qx}" y="{Y0}" fill="{INK}" clip-path="url(#typed2)" textLength="{len(cmd) * CW}" lengthAdjust="spacingAndGlyphs">{cmd}</text>
+<g opacity="0">{show(t_end + 0.4)}<text x="{X0}" y="{Y0 + LH}" fill="{INK}">Bye! Thanks for visiting.</text></g>
+<g opacity="0">{show(t_end + 1.0)}<text x="{X0}" y="{Y0 + 2 * LH - 4}" fill="{SOFT}" font-size="14">[session closed · see you at the next commit]</text></g>
+</g>
+</svg>
+'''
+    with open(path, "w") as f:
+        f.write(svg)
+
+
 if __name__ == "__main__":
     out = sys.argv[1]
     os.makedirs(out, exist_ok=True)
     hero(os.path.join(out, "hero.svg"))
     exploring(os.path.join(out, "exploring.svg"))
+    theatre(os.path.join(out, "theatre.svg"))
+    outro(os.path.join(out, "outro.svg"))

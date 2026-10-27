@@ -87,6 +87,7 @@ I am currently seeking full-time Data Analyst roles and internships.
 <img src="assets/excel.svg" alt="Spreadsheet of my interests: Formula 1 race strategy and data, narrative-driven AAA games, comics, films and TV, and analysing my own Spotify listening data." width="100%" />
 
 <p align="center">
+  <sub><b>Outside of data, you can also find me on</b></sub>&nbsp;
   <a href="https://steamcommunity.com/profiles/76561199473923156/"><img src="https://img.shields.io/badge/Steam-000000?style=for-the-badge&logo=steam&logoColor=white" alt="Steam" /></a>
   <a href="https://open.spotify.com/user/312nykmlcl4xkhip6eeckcwcc5u4"><img src="https://img.shields.io/badge/Spotify-1DB954?style=for-the-badge&logo=spotify&logoColor=white" alt="Spotify" /></a>
 </p>

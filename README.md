@@ -1,10 +1,10 @@
-<img src="assets/banner.png" alt="Tarun Sai banner" width="100%" />
+<img src="assets/hero.svg" alt="MySQL terminal showing Tarun Sai's profile: Data Analyst, SQL, Python, Excel, Power BI" width="100%" />
 
 <p align="center">
-  <a href="#featured-projects">Projects</a> ·
-  <a href="#tech-stack">Tech Stack</a> ·
-  <a href="#github-stats">GitHub Stats</a> ·
-  <a href="#beyond-data">Beyond Data</a>
+  <a href="#featured-projects"><img src="https://img.shields.io/badge/Projects-E07A5F?style=for-the-badge" alt="Projects" /></a>
+  <a href="#tech-stack"><img src="https://img.shields.io/badge/Tech%20Stack-3D405B?style=for-the-badge" alt="Tech Stack" /></a>
+  <a href="#github-stats"><img src="https://img.shields.io/badge/GitHub%20Stats-81B29A?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Stats" /></a>
+  <a href="#beyond-data"><img src="https://img.shields.io/badge/Beyond%20Data-A0674B?style=for-the-badge" alt="Beyond Data" /></a>
 </p>
 
 ## Tarun Sai
@@ -13,18 +13,6 @@
 I am a Computer Science and Engineering graduate (B.Tech, Data Science specialization) from Mohan Babu University, Tirupati. I focus on cleaning raw datasets, analyzing them with SQL, Python, Excel and Power BI, and presenting the findings clearly.
 
 I am currently seeking full-time Data Analyst roles and internships.
-
-```
-mysql> SELECT * FROM profile WHERE name = 'Tarun Sai'\G
-*************************** 1. row ***************************
-    name: Tarun Sai
-    role: Data Analyst
-   tools: SQL, Python, Excel, Power BI
-   focus: Data Cleaning, Exploratory Data Analysis
-location: Proddatur, Andhra Pradesh, India
-  status: Open to full-time roles and internships
-1 row in set (0.00 sec)
-```
 
 **Location:** Proddatur, Andhra Pradesh, India
 
@@ -94,18 +82,15 @@ Cleaned and analyzed 75+ years of Formula 1 race data (1950–2026) in MySQL, fi
 
 ### Currently Exploring
 
-```
-[01] Power BI: building interactive dashboards and advanced visualizations
-[02] Python: deeper statistical analysis with Pandas and NumPy
-```
+<img src="assets/exploring.svg" alt="Currently exploring: Power BI for interactive dashboards and advanced visualizations, and Python for deeper statistical analysis with Pandas and NumPy" width="100%" />
 
 ---
 
 ### GitHub Stats
 
 <p>
-  <img src="https://github-readme-stats.vercel.app/api?username=Tarun-Sai99&show_icons=true&hide_border=true&bg_color=F5ECDD&title_color=80583E&text_color=5C4033&icon_color=A0674B&ring_color=A0674B" alt="GitHub stats" height="165" />
-  <img src="https://streak-stats.demolab.com?user=Tarun-Sai99&hide_border=true&timezone=Asia/Kolkata&background=F5ECDD&ring=A0674B&fire=A0674B&currStreakNum=5C4033&sideNums=5C4033&currStreakLabel=80583E&sideLabels=5C4033&dates=8C7B6B&stroke=E3D3BD" alt="GitHub streak" height="165" />
+  <img src="https://github-readme-stats.vercel.app/api?username=Tarun-Sai99&show_icons=true&hide_border=true&bg_color=0F172A&title_color=EF4444&text_color=E2E8F0&icon_color=EF4444&ring_color=EF4444" alt="GitHub stats" height="165" />
+  <img src="https://streak-stats.demolab.com?user=Tarun-Sai99&hide_border=true&timezone=Asia/Kolkata&background=0F172A&ring=EF4444&fire=EF4444&currStreakNum=E2E8F0&sideNums=E2E8F0&currStreakLabel=EF4444&sideLabels=E2E8F0&dates=94A3B8&stroke=334155" alt="GitHub streak" height="165" />
 </p>
 
 ---
@@ -128,5 +113,5 @@ Cleaned and analyzed 75+ years of Formula 1 race data (1950–2026) in MySQL, fi
 <p align="center"><i>Clean data. Clear questions. Insights that hold up.</i></p>
 
 <p align="center">
-  <img src="https://komarev.com/ghpvc/?username=Tarun-Sai99&label=Profile%20views&color=80583e&style=flat" alt="Profile views" />
+  <img src="https://komarev.com/ghpvc/?username=Tarun-Sai99&label=Profile%20views&color=ef4444&style=flat" alt="Profile views" />
 </p>

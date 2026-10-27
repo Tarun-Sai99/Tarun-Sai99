@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 190" width="1000" height="190" role="img" aria-label="Currently exploring: Power BI dashboards and deeper Python analysis">
+<style>
+  .t { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; }
+  .bar { animation: fill 3.2s ease-in-out infinite; transform-box: fill-box; transform-origin: left; }
+  .b2 { animation-delay: .6s; }
+  .dot { animation: pulse 1.4s ease-in-out infinite; }
+  @keyframes fill { 0% { transform: scaleX(.08); } 70% { transform: scaleX(1); } 100% { transform: scaleX(1); opacity: .35; } }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .25; } }
+</style>
+<g transform="translate(1.0,1)">
+  <clipPath id="c0"><rect width="483.0" height="188" rx="14"/></clipPath>
+  <rect width="483.0" height="188" rx="14" fill="#0F172A"/>
+  <rect width="8" height="188" fill="#F2C811" clip-path="url(#c0)"/>
+  <rect width="483.0" height="188" rx="14" fill="none" stroke="#334155" stroke-width="2"/>
+  <g transform="translate(30,30)"><rect x="0" y="22" width="11" height="26" rx="2" fill="#E8B10A"/><rect x="14" y="12" width="11" height="36" rx="2" fill="#F2C811"/><rect x="28" y="0" width="11" height="48" rx="2" fill="#F7D84A"/></g>
+  <text class="t" x="96" y="50" font-size="24" font-weight="700" fill="#E2E8F0">Power BI</text>
+  <g transform="translate(335.0,34)">
+    <rect width="122" height="24" rx="12" fill="#1E293B"/>
+    <circle class="dot" cx="16" cy="12" r="5" fill="#EF4444"/>
+    <text class="t" x="28" y="17" font-size="12" font-weight="700" fill="#EF4444" letter-spacing="1">EXPLORING</text>
+  </g>
+  <text class="t" x="96" y="80" font-size="16" fill="#94A3B8">Interactive dashboards and</text>
+  <text class="t" x="96" y="102" font-size="16" fill="#94A3B8">advanced visualizations</text>
+  <rect x="30" y="134" width="423.0" height="10" rx="5" fill="#1E293B"/>
+  <rect class="bar" x="30" y="134" width="423.0" height="10" rx="5" fill="#F2C811"/>
+  <text class="t" x="30" y="168" font-size="12" fill="#94A3B8" letter-spacing="1">LEARNING IN PROGRESS</text>
+</g>
+<g transform="translate(516.0,1)">
+  <clipPath id="c1"><rect width="483.0" height="188" rx="14"/></clipPath>
+  <rect width="483.0" height="188" rx="14" fill="#0F172A"/>
+  <rect width="8" height="188" fill="#3776AB" clip-path="url(#c1)"/>
+  <rect width="483.0" height="188" rx="14" fill="none" stroke="#334155" stroke-width="2"/>
+  <g transform="translate(30,30)"><path d="M24 0c-9 0-12 4-12 8v6h12v2H7c-5 0-7 4-7 10s3 10 7 10h5v-7c0-4 3-7 7-7h12c4 0 6-3 6-6V8c0-4-4-8-13-8z" fill="#3776AB"/><circle cx="18" cy="6" r="2" fill="#fff"/><path d="M24 48c9 0 12-4 12-8v-6H24v-2h17c5 0 7-4 7-10s-3-10-7-10h-5v7c0 4-3 7-7 7H17c-4 0-6 3-6 6v8c0 4 4 8 13 8z" fill="#FFD43B"/><circle cx="30" cy="42" r="2" fill="#fff"/></g>
+  <text class="t" x="96" y="50" font-size="24" font-weight="700" fill="#E2E8F0">Python</text>
+  <g transform="translate(335.0,34)">
+    <rect width="122" height="24" rx="12" fill="#1E293B"/>
+    <circle class="dot" cx="16" cy="12" r="5" fill="#EF4444"/>
+    <text class="t" x="28" y="17" font-size="12" font-weight="700" fill="#EF4444" letter-spacing="1">EXPLORING</text>
+  </g>
+  <text class="t" x="96" y="80" font-size="16" fill="#94A3B8">Deeper statistical analysis</text>
+  <text class="t" x="96" y="102" font-size="16" fill="#94A3B8">with Pandas and NumPy</text>
+  <rect x="30" y="134" width="423.0" height="10" rx="5" fill="#1E293B"/>
+  <rect class="bar b2" x="30" y="134" width="423.0" height="10" rx="5" fill="#3776AB"/>
+  <text class="t" x="30" y="168" font-size="12" fill="#94A3B8" letter-spacing="1">LEARNING IN PROGRESS</text>
+</g>
+</svg>

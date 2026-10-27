@@ -26,21 +26,12 @@ I am currently seeking full-time Data Analyst roles and internships.
 
 ### Featured Projects
 
-**[Marvel vs DC: Comic Character Analysis (MySQL)](https://github.com/Tarun-Sai99/marvel-dc-sql-analysis)**
-Cleaned and analyzed 23,000+ Marvel and DC characters in MySQL, merging two messy wiki datasets and fixing issues like mixed date formats, broken unicode and duplicate IDs before running 15 analysis questions.
-**Key insights:**
-- Page time is extremely concentrated. At Marvel, the top 1% of characters get 42% of all appearances, while the bottom half share just 4%.
-- Female characters have roughly doubled since the 1940s but have stalled at about 30% of new characters.
+<img src="assets/notebook.svg" alt="Colab notebook loading my projects: Marvel vs DC comic character analysis (MySQL), where the top 1% of Marvel characters get 42% of appearances; and F1 performance analysis (MySQL), where pole sitters won 55% of hybrid-era races." width="100%" />
 
-`MySQL` `Window Functions` `REGEXP` `Data Cleaning` `EDA` `Python`
-
-**[F1 Performance Analysis (MySQL)](https://github.com/Tarun-Sai99/f1-performance-analysis-mysql)**
-Cleaned and analyzed 75+ years of Formula 1 race data (1950–2026) in MySQL, fixing 13 data quality issues before running exploratory analysis on driver and constructor performance.
-**Key insights:**
-- Pole position now decides more races than ever. The pole sitter won 55% of races in the hybrid era (2014 onward), up from 36% in 1980–1999.
-- Mechanical retirements fell from 39% of starters in the 1950s to 5.6% in the 2020s.
-
-`MySQL` `CTEs` `Window Functions` `Data Cleaning` `EDA` `Python`
+<p align="center">
+  <a href="https://github.com/Tarun-Sai99/marvel-dc-sql-analysis"><img src="https://img.shields.io/badge/Open-Marvel%20vs%20DC%20Analysis-EF4444?style=for-the-badge&logo=github&logoColor=white" alt="Open Marvel vs DC Analysis" /></a>
+  <a href="https://github.com/Tarun-Sai99/f1-performance-analysis-mysql"><img src="https://img.shields.io/badge/Open-F1%20Performance%20Analysis-EF4444?style=for-the-badge&logo=github&logoColor=white" alt="Open F1 Performance Analysis" /></a>
+</p>
 
 ---
 
@@ -88,19 +79,17 @@ Cleaned and analyzed 75+ years of Formula 1 race data (1950–2026) in MySQL, fi
 
 ### GitHub Stats
 
-<p>
-  <img src="https://github-readme-stats.vercel.app/api?username=Tarun-Sai99&show_icons=true&hide_border=true&bg_color=0F172A&title_color=EF4444&text_color=E2E8F0&icon_color=EF4444&ring_color=EF4444" alt="GitHub stats" height="165" />
-  <img src="https://streak-stats.demolab.com?user=Tarun-Sai99&hide_border=true&timezone=Asia/Kolkata&background=0F172A&ring=EF4444&fire=EF4444&currStreakNum=E2E8F0&sideNums=E2E8F0&currStreakLabel=EF4444&sideLabels=E2E8F0&dates=94A3B8&stroke=334155" alt="GitHub streak" height="165" />
-</p>
+<img src="https://raw.githubusercontent.com/Tarun-Sai99/Tarun-Sai99/output/dashboard.svg" alt="Power BI style report of my GitHub activity: contributions, active days, streaks, public repositories and contributions by month. Refreshed every 6 hours." width="100%" />
 
 ---
 
 ### Beyond Data
-- Following Formula 1, especially race strategy and the data behind it
-- Playing narrative-driven AAA games, with an interest in game design and storytelling [![Steam](https://img.shields.io/badge/Steam-000000?style=flat&logo=steam&logoColor=white)](https://steamcommunity.com/profiles/76561199473923156/)
-- Reading comics, with an eye for storytelling and how characters are built
-- Following films and TV series, from storytelling to box office trends
-- Analysing my own Spotify listening data [![Spotify](https://img.shields.io/badge/Spotify-1DB954?style=flat&logo=spotify&logoColor=white)](https://open.spotify.com/user/312nykmlcl4xkhip6eeckcwcc5u4)
+<img src="assets/excel.svg" alt="Spreadsheet of my interests: Formula 1 race strategy and data, narrative-driven AAA games, comics, films and TV, and analysing my own Spotify listening data." width="100%" />
+
+<p align="center">
+  <a href="https://steamcommunity.com/profiles/76561199473923156/"><img src="https://img.shields.io/badge/Steam-000000?style=for-the-badge&logo=steam&logoColor=white" alt="Steam" /></a>
+  <a href="https://open.spotify.com/user/312nykmlcl4xkhip6eeckcwcc5u4"><img src="https://img.shields.io/badge/Spotify-1DB954?style=for-the-badge&logo=spotify&logoColor=white" alt="Spotify" /></a>
+</p>
 
 ---
 
@@ -110,7 +99,7 @@ Cleaned and analyzed 75+ years of Formula 1 race data (1950–2026) in MySQL, fi
   <img alt="F1 car lapping my contribution graph, with DRS on every green square" src="https://raw.githubusercontent.com/Tarun-Sai99/Tarun-Sai99/output/f1-contrib-dark.svg" width="100%" />
 </picture>
 
-<img src="assets/outro.svg" alt="mysql> exit; Bye! Thanks for visiting." width="100%" />
+<img src="assets/outro.svg" alt="mysql> COMMIT; Query OK, 1 visit recorded. Thanks for watching. Post-credits scene: next project loading." width="100%" />
 
 <p align="center">
   <img src="https://komarev.com/ghpvc/?username=Tarun-Sai99&label=Profile%20views&color=ef4444&style=flat" alt="Profile views" />

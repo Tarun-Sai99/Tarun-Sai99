@@ -290,6 +290,161 @@ def outro(path):
     with open(path, "w") as f:
         f.write(svg)
 
+SANS = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
+
+
+def window(W, H, title, bar_color=None, title_color=None):
+    """Rounded app window with a title bar."""
+    return (f'<rect x="1" y="1" width="{W - 2}" height="{H - 2}" rx="14" fill="{BG}" stroke="{LINE}" stroke-width="2"/>'
+            f'<path d="M1 15 Q1 1 15 1 H{W - 15} Q{W - 1} 1 {W - 1} 15 V38 H1 Z" fill="{bar_color or BAR}"/>'
+            f'<circle cx="24" cy="20" r="6.5" fill="#E07A5F"/><circle cx="46" cy="20" r="6.5" fill="#E9B44C"/><circle cx="68" cy="20" r="6.5" fill="#81B29A"/>'
+            f'<text x="{W / 2}" y="25" text-anchor="middle" font-family="{SANS}" font-size="13" fill="{title_color or SOFT}">{escape(title)}</text>')
+
+
+def notebook(path, projects):
+    """Featured projects as a Colab notebook cell and its pandas output."""
+    W = 1000
+    code = [
+        [("import", "#C084FC"), (" pandas ", INK), ("as", "#C084FC"), (" pd", INK)],
+        [("projects ", INK), ("= ", SOFT), ("pd", INK), (".read_csv(", INK), ('"tarun_projects.csv"', "#86EFAC"), (")", INK)],
+        [("projects", INK), (".head()", INK)],
+    ]
+    cols = [("", 46), ("project", 74), ("tools", 300), ("key_insight", 450)]
+    rows_y0 = 236
+    H = rows_y0 + 46 * len(projects) + 50
+    out = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" role="img" aria-label="Google Colab notebook listing Tarun\'s projects with pandas">',
+           '<style>.spin{animation:spin 1s linear infinite;transform-box:fill-box;transform-origin:center}@keyframes spin{to{transform:rotate(360deg)}}</style>',
+           window(W, H, "tarun_projects.ipynb  ·  Google Colab")]
+    # Colab logo + menu
+    out.append(f'<g transform="translate(24,54)"><circle cx="9" cy="9" r="8" fill="none" stroke="#F9AB00" stroke-width="4"/><circle cx="25" cy="9" r="8" fill="none" stroke="#F9AB00" stroke-width="4" opacity=".8"/></g>'
+               f'<text x="70" y="69" font-family="{SANS}" font-size="15" fill="{INK}" font-weight="600">tarun_projects.ipynb</text>'
+               f'<text x="70" y="88" font-family="{SANS}" font-size="12" fill="{SOFT}" word-spacing="10">File Edit View Insert Runtime Tools Help</text>'
+               f'<line x1="1" x2="{W - 1}" y1="100" y2="100" stroke="{LINE}"/>')
+    # code cell
+    out.append(f'<rect x="64" y="114" width="{W - 90}" height="86" rx="8" fill="{BAR}" stroke="{LINE}"/>')
+    # run button: spinner then [1]
+    run_t, show_t = 1.0, 2.2
+    def vis(a, b):
+        tt, vv = kt((0, 0), (a, 0), (a + 0.01, 1), (b, 1), (b + 0.01, 0), (DUR, 0)) if b < DUR else kt((0, 0), (a, 0), (a + 0.01, 1), (DUR - 0.8, 1), (DUR, 0))
+        return f'<animate attributeName="opacity" dur="{DUR}s" repeatCount="indefinite" calcMode="discrete" keyTimes="{tt}" values="{vv}"/>'
+    out.append(f'<g opacity="1"><animate attributeName="opacity" dur="{DUR}s" repeatCount="indefinite" calcMode="discrete" keyTimes="{kt((0, 1), (run_t, 0), (DUR - 0.8, 0), (DUR, 1))[0]}" values="1;0;0;1"/>'
+               f'<circle cx="38" cy="132" r="13" fill="{SOFT}" opacity=".35"/><path d="M33 125 L46 132 L33 139 Z" fill="{INK}"/></g>')
+    out.append(f'<g opacity="0">{vis(run_t, show_t)}<circle class="spin" cx="38" cy="132" r="11" fill="none" stroke="{ACCENT}" stroke-width="3" stroke-dasharray="40 30"/></g>')
+    out.append(f'<g opacity="0">{vis(show_t, DUR)}<text x="38" y="137" text-anchor="middle" font-family="{FONT}" font-size="13" fill="{SOFT}">[1]</text></g>')
+    for i, toks in enumerate(code):
+        x = 82
+        parts = []
+        for tok, col in toks:
+            parts.append(f'<tspan fill="{col}">{escape(tok)}</tspan>')
+        out.append(f'<text x="{x}" y="{138 + i * 22}" font-family="{FONT}" font-size="15" xml:space="preserve">{"".join(parts)}</text>')
+    # output table
+    out.append(f'<g opacity="0">{vis(show_t, DUR)}')
+    hy = 222
+    for name, x in cols:
+        out.append(f'<text x="{x}" y="{hy}" font-family="{SANS}" font-size="13" font-weight="700" fill="{INK}">{name}</text>')
+    out.append(f'<line x1="40" x2="{W - 30}" y1="{hy + 10}" y2="{hy + 10}" stroke="{LINE}" stroke-width="2"/>')
+    for r, (pname, tools, insight) in enumerate(projects):
+        y = rows_y0 + 10 + r * 46
+        if r % 2 == 0:
+            out.append(f'<rect x="40" y="{y - 4}" width="{W - 70}" height="44" fill="{BAR}" opacity=".6"/>')
+        out.append(f'<text x="46" y="{y + 22}" font-family="{SANS}" font-size="13" font-weight="700" fill="{SOFT}">{r}</text>'
+                   f'<text x="74" y="{y + 22}" font-family="{SANS}" font-size="14" font-weight="600" fill="{ACCENT}">{escape(pname)}</text>'
+                   f'<text x="300" y="{y + 22}" font-family="{SANS}" font-size="13" fill="{INK}">{escape(tools)}</text>'
+                   f'<text x="450" y="{y + 14}" font-family="{SANS}" font-size="13" fill="{INK}">{escape(insight[0])}</text>'
+                   f'<text x="450" y="{y + 31}" font-family="{SANS}" font-size="13" fill="{INK}">{escape(insight[1])}</text>')
+    out.append(f'<text x="40" y="{H - 22}" font-family="{SANS}" font-size="12" fill="{SOFT}">{len(projects)} rows × 3 columns</text></g>')
+    out.append("</svg>\n")
+    with open(path, "w") as f:
+        f.write("".join(out))
+
+
+def excel(path, rows):
+    """Beyond Data as an Excel sheet with a moving cell cursor."""
+    W = 1000
+    green = "#217346"
+    top = 132
+    rh = 34
+    colA, colB = 60, 260  # x where columns A and B start
+    H = top + rh * (len(rows) + 1) + 70
+    out = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" role="img" aria-label="Excel sheet of Tarun\'s interests beyond data">',
+           window(W, H, "beyond_data.xlsx  ·  Excel", bar_color=green, title_color="#E8F5EE")]
+    # ribbon tabs
+    tabs = ["File", "Home", "Insert", "Page Layout", "Formulas", "Data", "Review", "View"]
+    x = 24
+    for t in tabs:
+        bold = t == "Home"
+        out.append(f'<text x="{x}" y="62" font-family="{SANS}" font-size="13" fill="{INK if bold else SOFT}" font-weight="{700 if bold else 400}">{t}</text>')
+        if bold:
+            out.append(f'<rect x="{x}" y="67" width="{len(t) * 8}" height="3" fill="#33C481"/>')
+        x += len(t) * 8 + 26
+    # formula bar
+    out.append(f'<rect x="16" y="82" width="70" height="28" rx="4" fill="{BAR}" stroke="{LINE}"/>'
+               f'<text x="100" y="101" font-family="Georgia, serif" font-style="italic" font-size="15" fill="{SOFT}">fx</text>'
+               f'<rect x="124" y="82" width="{W - 140}" height="28" rx="4" fill="{BAR}" stroke="{LINE}"/>'
+               f'<text x="136" y="101" font-family="{FONT}" font-size="14" fill="{INK}">=COUNTIF(life, <tspan fill="#33C481">"curious"</tspan>)</text>')
+    # headers
+    gx0, gx1 = 16, W - 16
+    out.append(f'<rect x="{gx0}" y="{top - 22}" width="{gx1 - gx0}" height="22" fill="{BAR}"/>')
+    for label, cx in (("A", (colA + colB) / 2), ("B", (colB + gx1) / 2)):
+        out.append(f'<text x="{cx}" y="{top - 6}" text-anchor="middle" font-family="{SANS}" font-size="12" fill="{SOFT}">{label}</text>')
+    out.append(f'<rect x="{gx0}" y="{top}" width="{colA - gx0}" height="{rh * (len(rows) + 1)}" fill="{BAR}"/>')
+    all_rows = [("Interest", "What I focus on")] + rows
+    for i, (a, b) in enumerate(all_rows):
+        y = top + i * rh
+        hdr = i == 0
+        out.append(f'<text x="{(gx0 + colA) / 2}" y="{y + 22}" text-anchor="middle" font-family="{SANS}" font-size="12" fill="{SOFT}">{i + 1}</text>')
+        if hdr:
+            out.append(f'<rect x="{colA}" y="{y}" width="{gx1 - colA}" height="{rh}" fill="{green}" opacity=".35"/>')
+        out.append(f'<text x="{colA + 12}" y="{y + 22}" font-family="{SANS}" font-size="14" fill="{INK}" font-weight="{700 if hdr or True else 400}">{escape(a)}</text>'
+                   f'<text x="{colB + 12}" y="{y + 22}" font-family="{SANS}" font-size="14" fill="{INK}" font-weight="{700 if hdr else 400}">{escape(b)}</text>')
+    # gridlines
+    for i in range(len(all_rows) + 1):
+        y = top + i * rh
+        out.append(f'<line x1="{gx0}" x2="{gx1}" y1="{y}" y2="{y}" stroke="{LINE}"/>')
+    for x in (gx0, colA, colB, gx1):
+        out.append(f'<line x1="{x}" x2="{x}" y1="{top - 22}" y2="{top + rh * len(all_rows)}" stroke="{LINE}"/>')
+    # moving cell cursor over column B rows 2..n
+    steps = [(0, top + rh)]
+    per = (DUR - 1) / len(rows)
+    for k in range(len(rows)):
+        steps.append((0.5 + k * per, top + rh * (k + 1)))
+    steps.append((DUR, top + rh))
+    tt, vv = kt(*steps)
+    for k in range(len(rows)):
+        a0 = 0 if k == 0 else 0.5 + k * per
+        a1 = 0.5 + (k + 1) * per if k < len(rows) - 1 else DUR
+        if k == 0:
+            t2, v2 = kt((0, 1), (0.5 + per, 0), (DUR, 0))
+        else:
+            t2, v2 = kt((0, 0), (a0, 1), (a1, 0), (DUR, 0)) if a1 < DUR else kt((0, 0), (a0, 1), (DUR, 1))
+        out.append(f'<text x="51" y="101" text-anchor="middle" font-family="{SANS}" font-size="13" fill="{INK}" opacity="{1 if k == 0 else 0}">B{k + 2}'
+                   f'<animate attributeName="opacity" dur="{DUR}s" repeatCount="indefinite" calcMode="discrete" keyTimes="{t2}" values="{v2}"/></text>')
+    out.append(f'<rect x="{colB}" y="{top + rh}" width="{gx1 - colB}" height="{rh}" fill="none" stroke="#33C481" stroke-width="2.5">'
+               f'<animate attributeName="y" dur="{DUR}s" repeatCount="indefinite" calcMode="discrete" keyTimes="{tt}" values="{vv}"/></rect>')
+    # sheet tabs
+    sy = top + rh * len(all_rows) + 14
+    out.append(f'<rect x="{gx0}" y="{sy}" width="140" height="26" fill="{BAR}" stroke="{LINE}"/>'
+               f'<rect x="{gx0}" y="{sy + 23}" width="140" height="3" fill="#33C481"/>'
+               f'<text x="{gx0 + 70}" y="{sy + 18}" text-anchor="middle" font-family="{SANS}" font-size="12" fill="{INK}" font-weight="600">Beyond Data</text>'
+               f'<text x="{gx0 + 160}" y="{sy + 18}" font-family="{SANS}" font-size="16" fill="{SOFT}">+</text>'
+               f'<text x="{gx1}" y="{sy + 18}" text-anchor="end" font-family="{SANS}" font-size="12" fill="{SOFT}">Count: {len(rows)}   ·   Ready</text>')
+    out.append("</svg>\n")
+    with open(path, "w") as f:
+        f.write("".join(out))
+
+
+PROJECTS = [
+    ("Marvel vs DC", "MySQL · Python", ("Top 1% of Marvel characters get", "42% of all appearances")),
+    ("F1 Performance Analysis", "MySQL · Python", ("Pole sitter won 55% of races in", "the hybrid era (2014 onward)")),
+]
+INTERESTS = [
+    ("Formula 1", "Race strategy and the data behind it"),
+    ("Gaming", "Narrative-driven AAA games, game design and storytelling"),
+    ("Comics", "Storytelling and how characters are built"),
+    ("Films & TV", "From storytelling to box office trends"),
+    ("Music", "Analysing my own Spotify listening data"),
+]
+
 if __name__ == "__main__":
     out = sys.argv[1]
     os.makedirs(out, exist_ok=True)
@@ -297,3 +452,5 @@ if __name__ == "__main__":
     exploring(os.path.join(out, "exploring.svg"))
     theatre(os.path.join(out, "theatre.svg"))
     outro(os.path.join(out, "outro.svg"))
+    notebook(os.path.join(out, "notebook.svg"), PROJECTS)
+    excel(os.path.join(out, "excel.svg"), INTERESTS)
